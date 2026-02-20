@@ -1,0 +1,3828 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Life Ribbons - Visualize Your Life Timeline</title>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+  <div id="root"></div>
+  
+  <!-- Load React, ReactDOM, and Babel from CDN -->
+  <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+  <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+  
+  <!-- Load Babel Standalone for JSX transformation -->
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  
+  <!-- Inline Lucide Icons -->
+  <script>
+    window.lucideReact = {
+      Plus: (props) => React.createElement('svg', {...props, xmlns: "http://www.w3.org/2000/svg", width: "24", height: "24", viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", strokeWidth: "2", strokeLinecap: "round", strokeLinejoin: "round"}, React.createElement('path', {d: "M5 12h14"}), React.createElement('path', {d: "M12 5v14"})),
+      Edit2: (props) => React.createElement('svg', {...props, xmlns: "http://www.w3.org/2000/svg", width: "24", height: "24", viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", strokeWidth: "2", strokeLinecap: "round", strokeLinejoin: "round"}, React.createElement('path', {d: "M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"})),
+      Trash2: (props) => React.createElement('svg', {...props, xmlns: "http://www.w3.org/2000/svg", width: "24", height: "24", viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", strokeWidth: "2", strokeLinecap: "round", strokeLinejoin: "round"}, React.createElement('path', {d: "M3 6h18"}), React.createElement('path', {d: "M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"}), React.createElement('path', {d: "M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"}), React.createElement('line', {x1: "10", x2: "10", y1: "11", y2: "17"}), React.createElement('line', {x1: "14", x2: "14", y1: "11", y2: "17"})),
+      X: (props) => React.createElement('svg', {...props, xmlns: "http://www.w3.org/2000/svg", width: "24", height: "24", viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", strokeWidth: "2", strokeLinecap: "round", strokeLinejoin: "round"}, React.createElement('path', {d: "M18 6 6 18"}), React.createElement('path', {d: "m6 6 12 12"})),
+      Check: (props) => React.createElement('svg', {...props, xmlns: "http://www.w3.org/2000/svg", width: "24", height: "24", viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", strokeWidth: "2", strokeLinecap: "round", strokeLinejoin: "round"}, React.createElement('path', {d: "M20 6 9 17l-5-5"})),
+      Calendar: (props) => React.createElement('svg', {...props, xmlns: "http://www.w3.org/2000/svg", width: "24", height: "24", viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", strokeWidth: "2", strokeLinecap: "round", strokeLinejoin: "round"}, React.createElement('rect', {width: "18", height: "18", x: "3", y: "4", rx: "2", ry: "2"}), React.createElement('line', {x1: "16", x2: "16", y1: "2", y2: "6"}), React.createElement('line', {x1: "8", x2: "8", y1: "2", y2: "6"}), React.createElement('line', {x1: "3", x2: "21", y1: "10", y2: "10"})),
+      Download: (props) => React.createElement('svg', {...props, xmlns: "http://www.w3.org/2000/svg", width: "24", height: "24", viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", strokeWidth: "2", strokeLinecap: "round", strokeLinejoin: "round"}, React.createElement('path', {d: "M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"}), React.createElement('polyline', {points: "7 10 12 15 17 10"}), React.createElement('line', {x1: "12", x2: "12", y1: "15", y2: "3"})),
+      Upload: (props) => React.createElement('svg', {...props, xmlns: "http://www.w3.org/2000/svg", width: "24", height: "24", viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", strokeWidth: "2", strokeLinecap: "round", strokeLinejoin: "round"}, React.createElement('path', {d: "M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"}), React.createElement('polyline', {points: "17 8 12 3 7 8"}), React.createElement('line', {x1: "12", x2: "12", y1: "3", y2: "15"})),
+      Image: (props) => React.createElement('svg', {...props, xmlns: "http://www.w3.org/2000/svg", width: "24", height: "24", viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", strokeWidth: "2", strokeLinecap: "round", strokeLinejoin: "round"}, React.createElement('rect', {width: "18", height: "18", x: "3", y: "3", rx: "2", ry: "2"}), React.createElement('circle', {cx: "9", cy: "9", r: "2"}), React.createElement('path', {d: "m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"})),
+      FileJson: (props) => React.createElement('svg', {...props, xmlns: "http://www.w3.org/2000/svg", width: "24", height: "24", viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", strokeWidth: "2", strokeLinecap: "round", strokeLinejoin: "round"}, React.createElement('path', {d: "M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"}), React.createElement('polyline', {points: "14 2 14 8 20 8"}), React.createElement('path', {d: "M10 12a1 1 0 0 0-1 1v1a1 1 0 0 1-1 1 1 1 0 0 1 1 1v1a1 1 0 0 0 1 1"}), React.createElement('path', {d: "M14 18a1 1 0 0 0 1-1v-1a1 1 0 0 1 1-1 1 1 0 0 1-1-1v-1a1 1 0 0 0-1-1"})),
+      HelpCircle: (props) => React.createElement('svg', {...props, xmlns: "http://www.w3.org/2000/svg", width: "24", height: "24", viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", strokeWidth: "2", strokeLinecap: "round", strokeLinejoin: "round"}, React.createElement('circle', {cx: "12", cy: "12", r: "10"}), React.createElement('path', {d: "M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"}), React.createElement('path', {d: "M12 17h.01"}))
+    };
+  </script>
+  
+  <script type="text/babel">
+// Default category color palette - vibrant rainbow
+const DEFAULT_CATEGORIES = {
+  Education: '#4F46E5',      // Indigo
+  Career: '#10B981',         // Emerald
+  Personal: '#8B5CF6',       // Purple
+  Health: '#EF4444',         // Red
+  Hobby: '#F97316',          // Orange
+  Travel: '#06B6D4',         // Cyan
+  Relationship: '#EC4899'    // Pink
+};
+
+// Initial demo data
+const INITIAL_MILESTONES = [
+  { id: 1, name: 'MBA', category: 'Education', startMonth: 9, startYear: 2022, endMonth: 5, endYear: 2026, ongoing: false, hypothetical: false, subEvents: [] },
+  { id: 2, name: 'Flight Training', category: 'Hobby', startMonth: 3, startYear: 2019, endMonth: 8, endYear: 2023, ongoing: false, hypothetical: false, subEvents: [] },
+  { id: 3, name: 'First Job', category: 'Career', startMonth: 6, startYear: 2015, endMonth: 12, endYear: 2019, ongoing: false, hypothetical: false, subEvents: [] },
+  { id: 4, name: 'Marathon Training', category: 'Health', startMonth: 1, startYear: 2020, endMonth: 10, endYear: 2020, ongoing: false, hypothetical: false, subEvents: [] }
+];
+
+function LifeRibbons() {
+  const [milestones, setMilestones] = useState(INITIAL_MILESTONES);
+  const [categories, setCategories] = useState(DEFAULT_CATEGORIES);
+  const [showForm, setShowForm] = useState(false);
+  const [showCategoryManager, setShowCategoryManager] = useState(false);
+  const [showInstructions, setShowInstructions] = useState(false);
+  const [importErrors, setImportErrors] = useState(null); // {imported: number, errors: [{name, reason}]}
+  const [visibleCategories, setVisibleCategories] = useState(() => Object.keys(categories));
+  const [editingId, setEditingId] = useState(null);
+  const [hoveredId, setHoveredId] = useState(null);
+  const [draggingEdge, setDraggingEdge] = useState(null); // { milestoneId, edge: 'start' | 'end' }
+  const [dragPosition, setDragPosition] = useState(null); // { y, month, year }
+  const [renamingId, setRenamingId] = useState(null); // ID of milestone being renamed
+  const [renameValue, setRenameValue] = useState(''); // New name value
+  const [selectedId, setSelectedId] = useState(null);
+  const [birthYear, setBirthYear] = useState(1995);
+  const [showExportMenu, setShowExportMenu] = useState(false);
+  const [showDataExportMenu, setShowDataExportMenu] = useState(false);
+  const [hoveredSubEvent, setHoveredSubEvent] = useState(null);
+  const [newCategoryName, setNewCategoryName] = useState('');
+  const [newCategoryColor, setNewCategoryColor] = useState('#3B82F6');
+  const [editingCategory, setEditingCategory] = useState(null);
+  const [editCategoryName, setEditCategoryName] = useState('');
+  const [editCategoryColor, setEditCategoryColor] = useState('#3B82F6');
+  const [formError, setFormError] = useState('');
+  const svgRef = useRef(null);
+  const fileInputRef = useRef(null);
+
+  
+  const [formData, setFormData] = useState({
+    name: '',
+    category: Object.keys(DEFAULT_CATEGORIES)[0],
+    startMonth: 1,
+    startYear: new Date().getFullYear(),
+    endMonth: 12,
+    endYear: new Date().getFullYear(),
+    ongoing: false,
+    hypothetical: false,
+    subEvents: []
+  });
+
+  const resetForm = () => {
+    const firstCategory = Object.keys(categories)[0] || 'Personal';
+    setFormData({
+      name: '',
+      category: firstCategory,
+      startMonth: 1,
+      startYear: new Date().getFullYear(),
+      endMonth: 12,
+      endYear: new Date().getFullYear(),
+      ongoing: false,
+      hypothetical: false,
+      subEvents: []
+    });
+    setFormError('');
+    setShowForm(false);
+    setEditingId(null);
+  };
+
+  // Ensure all milestones have hypothetical field (migration for old data)
+  useEffect(() => {
+    const needsUpdate = milestones.some(m => m.hypothetical === undefined);
+    if (needsUpdate) {
+      setMilestones(milestones.map(m => ({
+        ...m,
+        hypothetical: m.hypothetical || false
+      })));
+    }
+  }, []); // Only run once on mount
+
+  // Sync visible categories when categories change
+  useEffect(() => {
+    const categoryKeys = Object.keys(categories);
+    // Add new categories to visible list
+    setVisibleCategories(prev => {
+      const newCategories = categoryKeys.filter(cat => !prev.includes(cat));
+      return [...prev, ...newCategories];
+    });
+  }, [categories]);
+
+  // Toggle category visibility
+  const toggleCategoryFilter = (category) => {
+    setVisibleCategories(prev => {
+      if (prev.includes(category)) {
+        return prev.filter(c => c !== category);
+      } else {
+        return [...prev, category];
+      }
+    });
+  };
+
+  // Toggle all categories
+  const toggleAllCategories = () => {
+    if (visibleCategories.length === Object.keys(categories).length) {
+      setVisibleCategories([]); // Hide all
+    } else {
+      setVisibleCategories(Object.keys(categories)); // Show all
+    }
+  };
+
+  const handleSubmit = (e) => {
+    if (e && e.preventDefault) {
+      e.preventDefault();
+    }
+    
+    // Clear any previous errors
+    setFormError('');
+    
+    // Basic validation - name is required
+    if (!formData.name || !formData.name.trim()) {
+      setFormError('Please enter a milestone name');
+      return;
+    }
+    
+    // Clean up year values - convert strings to numbers if needed
+    const cleanStartYear = typeof formData.startYear === 'string' ? parseInt(formData.startYear) : formData.startYear;
+    const cleanEndYear = typeof formData.endYear === 'string' ? parseInt(formData.endYear) : formData.endYear;
+    
+    // Basic sanity check on years
+    if (!cleanStartYear || cleanStartYear < 1900 || cleanStartYear > 2100) {
+      setFormError('Please enter a valid start year between 1900 and 2100');
+      return;
+    }
+    
+    if (!formData.ongoing && (!cleanEndYear || cleanEndYear < 1900 || cleanEndYear > 2100)) {
+      setFormError('Please enter a valid end year between 1900 and 2100');
+      return;
+    }
+    
+    // Auto-swap dates if start is after end (for non-ongoing milestones)
+    let finalStartMonth = formData.startMonth;
+    let finalStartYear = cleanStartYear;
+    let finalEndMonth = formData.endMonth;
+    let finalEndYear = cleanEndYear;
+    
+    if (!formData.ongoing) {
+      const needsSwap = (finalStartYear > finalEndYear) || 
+                       (finalStartYear === finalEndYear && finalStartMonth > finalEndMonth);
+      
+      if (needsSwap) {
+        // Swap the dates
+        const tempMonth = finalStartMonth;
+        const tempYear = finalStartYear;
+        finalStartMonth = finalEndMonth;
+        finalStartYear = finalEndYear;
+        finalEndMonth = tempMonth;
+        finalEndYear = tempYear;
+      }
+    }
+    
+    // Filter out sub-events without names and prepare final data
+    const cleanedFormData = {
+      ...formData,
+      name: formData.name.trim(),
+      startMonth: finalStartMonth,
+      startYear: finalStartYear,
+      endMonth: finalEndMonth,
+      endYear: finalEndYear,
+      hypothetical: formData.hypothetical || false,
+      subEvents: (formData.subEvents || []).filter(se => se.name && se.name.trim())
+    };
+    
+    try {
+      if (editingId) {
+        setMilestones(milestones.map(m => 
+          m.id === editingId ? { ...cleanedFormData, id: editingId } : m
+        ));
+      } else {
+        const newMilestone = { ...cleanedFormData, id: Date.now() };
+        setMilestones([...milestones, newMilestone]);
+      }
+      resetForm();
+    } catch (error) {
+      console.error('Error saving milestone:', error);
+      alert('There was an error saving the milestone. Please try again.');
+    }
+  };
+
+  const handleEdit = (milestone) => {
+    setFormData({
+      ...milestone, 
+      hypothetical: milestone.hypothetical || false,
+      subEvents: milestone.subEvents || []
+    });
+    setEditingId(milestone.id);
+    setShowForm(true);
+  };
+
+  const handleDelete = (id) => {
+    setMilestones(milestones.filter(m => m.id !== id));
+    if (selectedId === id) setSelectedId(null);
+  };
+
+  // Sub-event management
+  const addSubEvent = () => {
+    const newSubEvent = {
+      id: Date.now(),
+      name: '',
+      month: 1,
+      year: formData.startYear
+    };
+    setFormData({
+      ...formData,
+      subEvents: [...(formData.subEvents || []), newSubEvent]
+    });
+  };
+
+  const updateSubEvent = (subEventId, field, value) => {
+    setFormData({
+      ...formData,
+      subEvents: formData.subEvents.map(se => 
+        se.id === subEventId ? { ...se, [field]: value } : se
+      )
+    });
+  };
+
+  const removeSubEvent = (subEventId) => {
+    setFormData({
+      ...formData,
+      subEvents: formData.subEvents.filter(se => se.id !== subEventId)
+    });
+  };
+
+  // Category management
+  const addCategory = () => {
+    if (!newCategoryName.trim()) {
+      alert('Please enter a category name');
+      return;
+    }
+    if (categories[newCategoryName]) {
+      alert('Category already exists');
+      return;
+    }
+    setCategories({
+      ...categories,
+      [newCategoryName.trim()]: newCategoryColor
+    });
+    setNewCategoryName('');
+    setNewCategoryColor('#3B82F6');
+  };
+
+  const deleteCategory = (categoryName) => {
+    // Prevent deleting the last category
+    if (Object.keys(categories).length === 1) {
+      alert('Cannot delete the last category. You must have at least one category.');
+      return;
+    }
+    
+    // Check if any milestones use this category
+    const milestonesUsingCategory = milestones.filter(m => m.category === categoryName);
+    if (milestonesUsingCategory.length > 0) {
+      // Find a fallback category (first available category that's not being deleted)
+      const fallbackCategory = Object.keys(categories).find(c => c !== categoryName) || 'Personal';
+      
+      const confirmDelete = window.confirm(
+        `${milestonesUsingCategory.length} milestone(s) use this category. They will be changed to "${fallbackCategory}". Continue?`
+      );
+      if (!confirmDelete) return;
+      
+      // Reassign milestones to fallback category
+      setMilestones(milestones.map(m => 
+        m.category === categoryName ? { ...m, category: fallbackCategory } : m
+      ));
+    }
+    
+    const newCategories = { ...categories };
+    delete newCategories[categoryName];
+    setCategories(newCategories);
+  };
+
+  const startEditingCategory = (categoryName) => {
+    setEditingCategory(categoryName);
+    setEditCategoryName(categoryName);
+    setEditCategoryColor(categories[categoryName]);
+  };
+
+  const cancelEditingCategory = () => {
+    setEditingCategory(null);
+    setEditCategoryName('');
+    setEditCategoryColor('#3B82F6');
+  };
+
+  const updateCategory = () => {
+    if (!editCategoryName.trim()) {
+      alert('Please enter a category name');
+      return;
+    }
+
+    const trimmedName = editCategoryName.trim();
+    
+    // Check if name changed and new name already exists
+    if (trimmedName !== editingCategory && categories[trimmedName]) {
+      alert('A category with this name already exists');
+      return;
+    }
+
+    const newCategories = { ...categories };
+    
+    // If name changed, update milestones that use the old category name
+    if (trimmedName !== editingCategory) {
+      setMilestones(milestones.map(m => 
+        m.category === editingCategory ? { ...m, category: trimmedName } : m
+      ));
+      delete newCategories[editingCategory];
+    }
+    
+    // Update category with new name and/or color
+    newCategories[trimmedName] = editCategoryColor;
+    setCategories(newCategories);
+    
+    // Reset editing state
+    cancelEditingCategory();
+  };
+
+  const generateRandomColor = () => {
+    // Carefully curated maximally distinct colors
+    const predefinedColors = [
+      // Primary vibrant colors (maximally spread in color wheel)
+      '#DC2626', // Red
+      '#EA580C', // Orange  
+      '#CA8A04', // Yellow
+      '#16A34A', // Green
+      '#0891B2', // Cyan
+      '#2563EB', // Blue
+      '#7C3AED', // Purple
+      '#C026D3', // Magenta
+      
+      // Secondary vibrant colors
+      '#EF4444', // Light Red
+      '#F97316', // Bright Orange
+      '#EAB308', // Bright Yellow
+      '#22C55E', // Bright Green
+      '#06B6D4', // Bright Cyan
+      '#3B82F6', // Bright Blue
+      '#8B5CF6', // Bright Purple
+      '#EC4899', // Bright Pink
+      
+      // Tertiary colors
+      '#BE123C', // Dark Red
+      '#C2410C', // Dark Orange
+      '#A16207', // Dark Yellow
+      '#15803D', // Dark Green
+      '#0E7490', // Dark Cyan
+      '#1D4ED8', // Dark Blue
+      '#6D28D9', // Dark Purple
+      '#A21CAF', // Dark Magenta
+      
+      // Additional distinctive colors
+      '#84CC16', // Lime
+      '#14B8A6', // Teal
+      '#0EA5E9', // Sky Blue
+      '#6366F1', // Indigo
+      '#A855F7', // Violet
+      '#D946EF', // Fuchsia
+      '#F43F5E', // Rose
+      '#FB923C'  // Amber
+    ];
+    
+    // Get currently used colors (case-insensitive)
+    const usedColors = new Set(Object.values(categories).map(c => c.toUpperCase()));
+    
+    // Filter out already used colors
+    const availableColors = predefinedColors.filter(c => !usedColors.has(c.toUpperCase()));
+    
+    // If we have unused predefined colors, pick one randomly
+    if (availableColors.length > 0) {
+      return availableColors[Math.floor(Math.random() * availableColors.length)];
+    }
+    
+    // If all predefined colors are used, generate a new HIGHLY distinct color
+    
+    // Helper: Convert hex to RGB
+    const hexToRgb = (hex) => {
+      const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+      return result ? {
+        r: parseInt(result[1], 16),
+        g: parseInt(result[2], 16),
+        b: parseInt(result[3], 16)
+      } : null;
+    };
+    
+    // Helper: Perceptual color distance (weighted RGB - more accurate than simple Euclidean)
+    // Uses weights that approximate human color perception
+    const colorDistance = (color1, color2) => {
+      const rgb1 = hexToRgb(color1);
+      const rgb2 = hexToRgb(color2);
+      
+      // Weighted Euclidean distance (approximates perceptual difference)
+      const rMean = (rgb1.r + rgb2.r) / 2;
+      const deltaR = rgb1.r - rgb2.r;
+      const deltaG = rgb1.g - rgb2.g;
+      const deltaB = rgb1.b - rgb2.b;
+      
+      // Redmean approximation for perceptual color difference
+      const weightR = 2 + rMean / 256;
+      const weightG = 4.0;
+      const weightB = 2 + (255 - rMean) / 256;
+      
+      return Math.sqrt(
+        weightR * deltaR * deltaR +
+        weightG * deltaG * deltaG +
+        weightB * deltaB * deltaB
+      );
+    };
+    
+    // Generate random colors and pick the one most distant from existing colors
+    let bestColor = null;
+    let maxMinDistance = 0;
+    const MIN_ACCEPTABLE_DISTANCE = 180; // Increased threshold for better distinction
+    
+    for (let attempt = 0; attempt < 100; attempt++) {
+      // Generate random vibrant color with good saturation and lightness
+      const hue = Math.floor(Math.random() * 360);
+      const saturation = 65 + Math.floor(Math.random() * 25); // 65-90% (vibrant)
+      const lightness = 40 + Math.floor(Math.random() * 25); // 40-65% (not too dark/light)
+      
+      // Convert HSL to RGB to Hex
+      const hslToHex = (h, s, l) => {
+        s /= 100;
+        l /= 100;
+        const c = (1 - Math.abs(2 * l - 1)) * s;
+        const x = c * (1 - Math.abs((h / 60) % 2 - 1));
+        const m = l - c / 2;
+        let r = 0, g = 0, b = 0;
+        if (0 <= h && h < 60) { r = c; g = x; b = 0; }
+        else if (60 <= h && h < 120) { r = x; g = c; b = 0; }
+        else if (120 <= h && h < 180) { r = 0; g = c; b = x; }
+        else if (180 <= h && h < 240) { r = 0; g = x; b = c; }
+        else if (240 <= h && h < 300) { r = x; g = 0; b = c; }
+        else if (300 <= h && h < 360) { r = c; g = 0; b = x; }
+        
+        const toHex = (n) => {
+          const hex = Math.round((n + m) * 255).toString(16);
+          return hex.length === 1 ? '0' + hex : hex;
+        };
+        return `#${toHex(r)}${toHex(g)}${toHex(b)}`.toUpperCase();
+      };
+      
+      const candidateColor = hslToHex(hue, saturation, lightness);
+      
+      // Find minimum distance to any existing color
+      const existingColors = Object.values(categories);
+      const minDistance = existingColors.length > 0
+        ? Math.min(...existingColors.map(c => colorDistance(candidateColor, c)))
+        : Infinity;
+      
+      // Keep the color with the maximum minimum distance
+      if (minDistance > maxMinDistance) {
+        maxMinDistance = minDistance;
+        bestColor = candidateColor;
+        
+        // If we found a color that's far enough from all existing colors, use it
+        if (minDistance >= MIN_ACCEPTABLE_DISTANCE) {
+          break;
+        }
+      }
+    }
+    
+    return bestColor || '#3B82F6';
+  };
+
+  // Odyssey management
+
+  // Helper function to generate filename with format: Ribbons-YYDDMM-HHMM
+  const getExportFilename = (extension) => {
+    const now = new Date();
+    const yy = String(now.getFullYear()).slice(-2);
+    const dd = String(now.getDate()).padStart(2, '0');
+    const mm = String(now.getMonth() + 1).padStart(2, '0');
+    const hh = String(now.getHours()).padStart(2, '0');
+    const min = String(now.getMinutes()).padStart(2, '0');
+    return `Ribbons-${yy}${dd}${mm}-${hh}${min}.${extension}`;
+  };
+
+  // Export/Import Functions
+  const exportData = () => {
+    try {
+      // Export as JSON with all data including categories
+      const exportObj = {
+        milestones: milestones,
+        categories: categories,
+        birthYear: birthYear
+      };
+      
+      const jsonStr = JSON.stringify(exportObj, null, 2);
+      const blob = new Blob([jsonStr], { type: 'application/json;charset=utf-8;' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = getExportFilename('json');
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+      setShowDataExportMenu(false);
+    } catch (error) {
+      console.error('Export error:', error);
+      alert('Error exporting data. Please try again.');
+    }
+  };
+
+  const exportAsCSV = () => {
+    try {
+      // Convert to CSV format with milestones and categories
+      let csv = 'Milestone Name,Category,Start Month,Start Year,End Month,End Year,Ongoing,Hypothetical,Sub-Events\n';
+      
+      milestones.forEach(m => {
+        const subEventsStr = m.subEvents && m.subEvents.length > 0 
+          ? m.subEvents.map(se => `${se.name} (${se.month}/${se.year})`).join('; ')
+          : '';
+        
+        csv += `"${m.name}","${m.category}",${m.startMonth},${m.startYear},${m.endMonth || ''},${m.endYear || ''},${m.ongoing ? 'Yes' : 'No'},${m.hypothetical ? 'Yes' : 'No'},"${subEventsStr}"\n`;
+      });
+      
+      // Add category definitions section
+      csv += '\n';
+      csv += 'CATEGORY_DEFINITIONS\n';
+      csv += 'Category Name,Color\n';
+      
+      Object.entries(categories).forEach(([name, color]) => {
+        csv += `"${name}","${color}"\n`;
+      });
+      
+      const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = getExportFilename('csv');
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+      setShowDataExportMenu(false);
+    } catch (error) {
+      console.error('CSV export error:', error);
+      alert('Error exporting CSV. Please try again.');
+    }
+  };
+
+  const importData = (event) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+    
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      try {
+        const content = e.target.result;
+        
+        // Check if it's CSV or JSON
+        if (file.name.endsWith('.csv')) {
+          // Parse CSV
+          const lines = content.split('\n').filter(line => line.trim());
+          if (lines.length < 2) {
+            throw new Error('CSV file is empty or invalid');
+          }
+          
+          // Check if CSV contains category definitions
+          const categoryDefIndex = lines.findIndex(line => line.trim() === 'CATEGORY_DEFINITIONS');
+          
+          // Split into milestone lines and category lines
+          let milestoneLines;
+          let categoryLines = [];
+          
+          if (categoryDefIndex !== -1) {
+            // New format with categories
+            milestoneLines = lines.slice(1, categoryDefIndex); // Skip header, stop at marker
+            categoryLines = lines.slice(categoryDefIndex + 2); // Skip marker and "Category Name,Color" header
+          } else {
+            // Old format without categories
+            milestoneLines = lines.slice(1);
+          }
+          
+          // Parse milestones
+          const importedMilestones = [];
+          
+          milestoneLines.forEach(line => {
+            // Simple CSV parser (handles quoted fields)
+            const matches = line.match(/(".*?"|[^",\s]+)(?=\s*,|\s*$)/g);
+            if (!matches || matches.length < 7) return;
+            
+            // Handle both old format (8 fields) and new format (9 fields with hypothetical)
+            let name, category, startMonth, startYear, endMonth, endYear, ongoing, hypothetical, subEventsStr;
+            
+            if (matches.length >= 9) {
+              // New format with hypothetical field
+              [name, category, startMonth, startYear, endMonth, endYear, ongoing, hypothetical, subEventsStr] = matches.map(m => m.replace(/^"|"$/g, ''));
+            } else {
+              // Old format without hypothetical field
+              [name, category, startMonth, startYear, endMonth, endYear, ongoing, subEventsStr] = matches.map(m => m.replace(/^"|"$/g, ''));
+              hypothetical = 'No'; // Default for old data
+            }
+            
+            // Parse sub-events
+            const subEvents = [];
+            if (subEventsStr && subEventsStr.trim()) {
+              const subEventParts = subEventsStr.split(';').map(s => s.trim());
+              subEventParts.forEach((part, idx) => {
+                const match = part.match(/(.+?)\s*\((\d+)\/(\d+)\)/);
+                if (match) {
+                  subEvents.push({
+                    id: Date.now() + idx,
+                    name: match[1].trim(),
+                    month: parseInt(match[2]),
+                    year: parseInt(match[3])
+                  });
+                }
+              });
+            }
+            
+            // Auto-swap dates if needed for non-ongoing milestones
+            let finalStartYear = parseInt(startYear);
+            let finalEndYear = parseInt(endYear) || new Date().getFullYear();
+            let finalStartMonth = parseInt(startMonth) || 1;
+            let finalEndMonth = parseInt(endMonth) || 12;
+            
+            if (ongoing !== 'Yes') {
+              const needsSwap = (finalStartYear > finalEndYear) || 
+                               (finalStartYear === finalEndYear && finalStartMonth > finalEndMonth);
+              
+              if (needsSwap) {
+                // Swap the dates automatically
+                const tempMonth = finalStartMonth;
+                const tempYear = finalStartYear;
+                finalStartMonth = finalEndMonth;
+                finalStartYear = finalEndYear;
+                finalEndMonth = tempMonth;
+                finalEndYear = tempYear;
+              }
+            }
+            
+            importedMilestones.push({
+              id: Date.now() + Math.random(),
+              name: name,
+              category: category || 'Personal',
+              startMonth: finalStartMonth,
+              startYear: finalStartYear,
+              endMonth: finalEndMonth,
+              endYear: finalEndYear,
+              ongoing: ongoing === 'Yes',
+              hypothetical: hypothetical === 'Yes',
+              subEvents: subEvents
+            });
+          });
+          
+          // Parse category definitions if present
+          const newCategories = {...categories};
+          
+          if (categoryLines.length > 0) {
+            // Import categories from CSV
+            categoryLines.forEach(line => {
+              const matches = line.match(/(".*?"|[^",\s]+)(?=\s*,|\s*$)/g);
+              if (matches && matches.length >= 2) {
+                const [catName, catColor] = matches.map(m => m.replace(/^"|"$/g, ''));
+                if (catName && catColor) {
+                  newCategories[catName] = catColor;
+                }
+              }
+            });
+          } else {
+            // Old format without category definitions - auto-create missing categories
+            const generateDistinctColor = (existingCategories) => {
+            const predefinedColors = [
+              '#DC2626', '#EA580C', '#CA8A04', '#16A34A', '#0891B2', '#2563EB', '#7C3AED', '#C026D3',
+              '#EF4444', '#F97316', '#EAB308', '#22C55E', '#06B6D4', '#3B82F6', '#8B5CF6', '#EC4899',
+              '#BE123C', '#C2410C', '#A16207', '#15803D', '#0E7490', '#1D4ED8', '#6D28D9', '#A21CAF'
+            ];
+            
+            const usedColors = new Set(Object.values(existingCategories).map(c => c.toUpperCase()));
+            const availableColors = predefinedColors.filter(c => !usedColors.has(c.toUpperCase()));
+            
+            if (availableColors.length > 0) {
+              return availableColors[0]; // Return first available
+            }
+            
+            // If all used, generate a distinct color using perceptual distance
+            const hexToRgb = (hex) => {
+              const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+              return result ? {
+                r: parseInt(result[1], 16),
+                g: parseInt(result[2], 16),
+                b: parseInt(result[3], 16)
+              } : null;
+            };
+            
+            const colorDistance = (color1, color2) => {
+              const rgb1 = hexToRgb(color1);
+              const rgb2 = hexToRgb(color2);
+              const rMean = (rgb1.r + rgb2.r) / 2;
+              const deltaR = rgb1.r - rgb2.r;
+              const deltaG = rgb1.g - rgb2.g;
+              const deltaB = rgb1.b - rgb2.b;
+              const weightR = 2 + rMean / 256;
+              const weightG = 4.0;
+              const weightB = 2 + (255 - rMean) / 256;
+              return Math.sqrt(weightR * deltaR * deltaR + weightG * deltaG * deltaG + weightB * deltaB * deltaB);
+            };
+            
+            let bestColor = null;
+            let maxMinDistance = 0;
+            
+            for (let i = 0; i < 50; i++) {
+              const hue = Math.floor(Math.random() * 360);
+              const saturation = 70;
+              const lightness = 50;
+              
+              const s = saturation / 100;
+              const l = lightness / 100;
+              const c = (1 - Math.abs(2 * l - 1)) * s;
+              const x = c * (1 - Math.abs((hue / 60) % 2 - 1));
+              const m = l - c / 2;
+              let r = 0, g = 0, b = 0;
+              if (0 <= hue && hue < 60) { r = c; g = x; b = 0; }
+              else if (60 <= hue && hue < 120) { r = x; g = c; b = 0; }
+              else if (120 <= hue && hue < 180) { r = 0; g = c; b = x; }
+              else if (180 <= hue && hue < 240) { r = 0; g = x; b = c; }
+              else if (240 <= hue && hue < 300) { r = x; g = 0; b = c; }
+              else { r = c; g = 0; b = x; }
+              
+              const toHex = (n) => {
+                const hex = Math.round((n + m) * 255).toString(16);
+                return hex.length === 1 ? '0' + hex : hex;
+              };
+              const candidateColor = `#${toHex(r)}${toHex(g)}${toHex(b)}`.toUpperCase();
+              
+              const existingColors = Object.values(existingCategories);
+              const minDistance = existingColors.length > 0
+                ? Math.min(...existingColors.map(c => colorDistance(candidateColor, c)))
+                : Infinity;
+              
+              if (minDistance > maxMinDistance) {
+                maxMinDistance = minDistance;
+                bestColor = candidateColor;
+              }
+            }
+            
+            return bestColor || '#3B82F6';
+          };
+          
+          importedMilestones.forEach(m => {
+            if (m.category && !newCategories[m.category]) {
+              newCategories[m.category] = generateDistinctColor(newCategories);
+            }
+          });
+          }
+          
+          // Update categories if new ones were added
+          if (Object.keys(newCategories).length > Object.keys(categories).length || categoryLines.length > 0) {
+            setCategories(newCategories);
+            // Make all categories visible by default
+            setVisibleCategories(Object.keys(newCategories));
+          }
+          
+          setMilestones(importedMilestones);
+          
+          alert(`CSV data imported successfully! ${importedMilestones.length} milestone(s) imported.`);
+        } else {
+          // Parse JSON
+          const data = JSON.parse(content);
+          
+          if (!data.milestones || !Array.isArray(data.milestones)) {
+            throw new Error('Invalid data format');
+          }
+          
+          // Ensure all milestones have required fields with defaults
+          const milestonesWithDefaults = data.milestones.map(m => {
+            // Auto-swap dates if needed for non-ongoing milestones
+            let finalStartMonth = m.startMonth;
+            let finalStartYear = m.startYear;
+            let finalEndMonth = m.endMonth;
+            let finalEndYear = m.endYear;
+            
+            if (!m.ongoing) {
+              const needsSwap = (finalStartYear > finalEndYear) || 
+                               (finalStartYear === finalEndYear && finalStartMonth > finalEndMonth);
+              
+              if (needsSwap) {
+                // Swap the dates automatically
+                const tempMonth = finalStartMonth;
+                const tempYear = finalStartYear;
+                finalStartMonth = finalEndMonth;
+                finalStartYear = finalEndYear;
+                finalEndMonth = tempMonth;
+                finalEndYear = tempYear;
+              }
+            }
+            
+            return {
+              ...m,
+              startMonth: finalStartMonth,
+              startYear: finalStartYear,
+              endMonth: finalEndMonth,
+              endYear: finalEndYear,
+              hypothetical: m.hypothetical || false,
+              subEvents: m.subEvents || []
+            };
+          });
+          
+          setMilestones(milestonesWithDefaults);
+          
+          if (data.birthYear && typeof data.birthYear === 'number') {
+            setBirthYear(data.birthYear);
+          }
+          
+          // Import categories if they exist
+          if (data.categories && typeof data.categories === 'object') {
+            setCategories(data.categories);
+            // Make all categories visible by default
+            setVisibleCategories(Object.keys(data.categories));
+          }
+          
+          
+          alert(`JSON data imported successfully! ${milestonesWithDefaults.length} milestone(s) imported.`);
+        }
+      } catch (error) {
+        console.error('Import error:', error);
+        alert('Error importing file. Please ensure it\'s a valid Life Ribbons CSV or JSON file.');
+      }
+    };
+    
+    reader.onerror = () => {
+      alert('Error reading file. Please try again.');
+    };
+    
+    reader.readAsText(file);
+    event.target.value = ''; // Reset input
+  };
+
+  const exportAsSVG = () => {
+    try {
+      if (!svgRef.current) {
+        alert('Timeline not ready. Please try again.');
+        return;
+      }
+      
+      // Clone the SVG and add proper XML declaration and namespaces
+      const svgElement = svgRef.current;
+      const svgClone = svgElement.cloneNode(true);
+      
+      // Add necessary SVG attributes
+      svgClone.setAttribute('xmlns', 'http://www.w3.org/2000/svg');
+      svgClone.setAttribute('xmlns:xlink', 'http://www.w3.org/1999/xlink');
+      
+      // Add embedded font and styles
+      const styleElement = document.createElementNS('http://www.w3.org/2000/svg', 'style');
+      styleElement.textContent = `
+        @import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&display=swap');
+        text { font-family: 'Syne', sans-serif; }
+      `;
+      svgClone.insertBefore(styleElement, svgClone.firstChild);
+      
+      // Serialize with XML declaration
+      const serializer = new XMLSerializer();
+      const svgString = serializer.serializeToString(svgClone);
+      const svgData = '<?xml version="1.0" encoding="UTF-8" standalone="no"?>\n' + svgString;
+      
+      const blob = new Blob([svgData], { type: 'image/svg+xml;charset=utf-8' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `getExportFilename('svg')`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+      setShowExportMenu(false);
+    } catch (error) {
+      console.error('SVG export error:', error);
+      alert('Error exporting SVG. Please try again.');
+    }
+  };
+
+  const exportAsPNG = () => {
+    try {
+      if (!svgRef.current) {
+        alert('Timeline not ready. Please try again.');
+        return;
+      }
+      
+      const svgElement = svgRef.current;
+      
+      // Clone the SVG to avoid modifying the original
+      const svgClone = svgElement.cloneNode(true);
+      
+      // Get computed dimensions
+      const bbox = svgElement.getBoundingClientRect();
+      const width = bbox.width;
+      const height = bbox.height;
+      
+      // Set explicit dimensions on clone
+      svgClone.setAttribute('width', width);
+      svgClone.setAttribute('height', height);
+      
+      // Serialize the SVG
+      const svgData = new XMLSerializer().serializeToString(svgClone);
+      
+      // Create a data URL with proper encoding
+      const svgBlob = new Blob([svgData], { type: 'image/svg+xml;charset=utf-8' });
+      const url = URL.createObjectURL(svgBlob);
+      
+      const img = new Image();
+      
+      img.onload = () => {
+        try {
+          // Create canvas with 2x resolution for better quality
+          const canvas = document.createElement('canvas');
+          const scale = 2;
+          canvas.width = width * scale;
+          canvas.height = height * scale;
+          
+          const ctx = canvas.getContext('2d');
+          
+          // Fill white background
+          ctx.fillStyle = 'white';
+          ctx.fillRect(0, 0, canvas.width, canvas.height);
+          
+          // Scale and draw
+          ctx.scale(scale, scale);
+          ctx.drawImage(img, 0, 0, width, height);
+          
+          // Convert to blob and download
+          canvas.toBlob((blob) => {
+            URL.revokeObjectURL(url); // Clean up the SVG URL
+            
+            if (!blob) {
+              alert('Error creating PNG. Please try again.');
+              return;
+            }
+            
+            const pngUrl = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = pngUrl;
+            a.download = getExportFilename('png');
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(pngUrl);
+            setShowExportMenu(false);
+          }, 'image/png', 1.0);
+        } catch (error) {
+          console.error('Canvas error:', error);
+          alert('Error creating PNG: ' + error.message);
+          URL.revokeObjectURL(url);
+        }
+      };
+      
+      img.onerror = (e) => {
+        console.error('Image load error:', e);
+        alert('Error loading SVG for PNG export. Please try again.');
+        URL.revokeObjectURL(url);
+      };
+      
+      img.src = url;
+      
+    } catch (error) {
+      console.error('PNG export error:', error);
+      alert('Error exporting PNG: ' + error.message);
+    }
+  };
+
+  const monthToDecimal = (month, year) => year + (month - 1) / 12;
+
+  // Calculate timeline bounds
+  // Filter milestones by visible categories first (before calculating year range)
+  const filteredMilestones = milestones.filter(m => visibleCategories.includes(m.category));
+
+  const allMilestoneYears = filteredMilestones.flatMap(m => [
+    m.startYear,
+    m.ongoing ? new Date().getFullYear() : m.endYear
+  ]);
+  
+  const allYears = allMilestoneYears;
+  const minYear = allYears.length > 0 ? Math.min(...allYears) : new Date().getFullYear() - 5;
+  // Add 1 to maxYear to accommodate ribbons that end in late months (e.g. December)
+  // This ensures the timeline has enough vertical space for ribbons ending near year boundaries
+  const maxYear = allYears.length > 0 ? Math.max(...allYears) + 1 : new Date().getFullYear();
+  
+  // Dynamic timeline height based on text length to prevent overlap
+  const yearRange = maxYear - minYear;
+  
+  // Use Canvas to measure actual text width for accuracy
+  const measureTextWidth = (text) => {
+    const canvas = document.createElement('canvas');
+    const context = canvas.getContext('2d');
+    // Match the font used in the SVG ribbons
+    context.font = "700 13px 'Syne', sans-serif";
+    return context.measureText(text).width;
+  };
+  
+  // Find the milestone with the longest text (from visible milestones only)
+  let longestTextMilestone = null;
+  let longestTextWidth = 0;
+  
+  filteredMilestones.forEach(m => {
+    const textWidth = measureTextWidth(m.name);
+    if (textWidth > longestTextWidth) {
+      longestTextWidth = textWidth;
+      longestTextMilestone = m;
+    }
+  });
+  
+  if (longestTextMilestone) {
+    // Calculate that ribbon's duration
+    const startDate = monthToDecimal(longestTextMilestone.startMonth, longestTextMilestone.startYear);
+    const endDate = longestTextMilestone.ongoing 
+      ? monthToDecimal(new Date().getMonth() + 1, new Date().getFullYear())
+      : monthToDecimal(longestTextMilestone.endMonth, longestTextMilestone.endYear);
+    const durationYears = Math.max(0.5, endDate - startDate); // Minimum 0.5 years
+    
+    // Small padding between text edge and ribbon edge
+    const padding = 20; // 10px on each end
+    const ribbonHeightNeeded = longestTextWidth + padding;
+    
+    // Calculate pixels per year so this ribbon fits its text
+    var pixelsPerYear = ribbonHeightNeeded / durationYears;
+    
+    console.log('Longest text milestone:', longestTextMilestone.name);
+    console.log('Text width:', longestTextWidth);
+    console.log('Duration (years):', durationYears);
+    console.log('Calculated pixels per year:', pixelsPerYear);
+  } else {
+    var pixelsPerYear = 80; // Default fallback
+  }
+  
+  // Use minimum of 80px
+  pixelsPerYear = Math.max(80, pixelsPerYear);
+  
+  console.log('Final pixels per year:', pixelsPerYear);
+  
+  const minHeight = 800; // Minimum for small datasets
+  const timelineHeight = Math.max(minHeight, yearRange * pixelsPerYear);
+  const timeScale = timelineHeight / (maxYear - minYear);
+
+  const yearToY = (year) => (maxYear - year) * timeScale;
+  const dateToY = (month, year) => yearToY(monthToDecimal(month, year));
+  
+  // Convert Y position back to month/year
+  const yToDate = (y) => {
+    const decimalYear = maxYear - (y / timeScale);
+    const year = Math.floor(decimalYear);
+    const monthDecimal = (decimalYear - year) * 12;
+    const month = Math.max(1, Math.min(12, Math.round(monthDecimal) + 1));
+    return { month, year };
+  };
+  
+  // Handle edge drag start
+  const handleEdgeDragStart = (milestoneId, edge, e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    const milestone = milestones.find(m => m.id === milestoneId);
+    if (!milestone || milestone.ongoing) return; // Can't drag ongoing milestones
+    
+    setDraggingEdge({ milestoneId, edge });
+    
+    // Set initial drag position to current edge date
+    const currentMonth = edge === 'start' ? milestone.startMonth : milestone.endMonth;
+    const currentYear = edge === 'start' ? milestone.startYear : milestone.endYear;
+    const currentY = dateToY(currentMonth, currentYear);
+    
+    setDragPosition({ y: currentY, month: currentMonth, year: currentYear });
+  };
+  
+  // Handle edge dragging
+  const handleEdgeDrag = (e) => {
+    if (!draggingEdge) return;
+    
+    e.preventDefault();
+    e.stopPropagation();
+    
+    // Support both mouse and touch events
+    const clientX = e.clientX !== undefined ? e.clientX : e.touches?.[0]?.clientX;
+    const clientY = e.clientY !== undefined ? e.clientY : e.touches?.[0]?.clientY;
+    
+    if (clientX === undefined || clientY === undefined) return;
+    
+    // Get SVG element and use proper coordinate transformation
+    const svg = e.currentTarget;
+    const pt = svg.createSVGPoint();
+    pt.x = clientX;
+    pt.y = clientY;
+    
+    // Transform to SVG coordinates
+    const svgCoords = pt.matrixTransform(svg.getScreenCTM().inverse());
+    const y = svgCoords.y;
+    
+    const { month, year } = yToDate(y);
+    setDragPosition({ y, month, year });
+  };
+  
+  // Handle edge drag end
+  const handleEdgeDragEnd = (e) => {
+    if (!draggingEdge || !dragPosition) {
+      setDraggingEdge(null);
+      setDragPosition(null);
+      return;
+    }
+    
+    e?.preventDefault();
+    e?.stopPropagation();
+    
+    const { milestoneId, edge } = draggingEdge;
+    const { month, year } = dragPosition;
+    
+    // Get the milestone to validate
+    const milestone = milestones.find(m => m.id === milestoneId);
+    if (!milestone) {
+      setDraggingEdge(null);
+      setDragPosition(null);
+      return;
+    }
+    
+    // Validate the new dates using month/year comparison
+    let newStartMonth = edge === 'start' ? month : milestone.startMonth;
+    let newStartYear = edge === 'start' ? year : milestone.startYear;
+    let newEndMonth = edge === 'end' ? month : milestone.endMonth;
+    let newEndYear = edge === 'end' ? year : milestone.endYear;
+    
+    // Check if dates need to be swapped (start is after end)
+    const needsSwap = (newStartYear > newEndYear) || 
+                     (newStartYear === newEndYear && newStartMonth > newEndMonth);
+    
+    if (needsSwap) {
+      // Swap the dates - user dragged past the opposite edge
+      const tempMonth = newStartMonth;
+      const tempYear = newStartYear;
+      newStartMonth = newEndMonth;
+      newStartYear = newEndYear;
+      newEndMonth = tempMonth;
+      newEndYear = tempYear;
+    }
+    
+    // Update the milestone with valid dates (swapped if needed)
+    setMilestones(milestones.map(m => {
+      if (m.id !== milestoneId) return m;
+      
+      // Use the potentially swapped dates
+      return { 
+        ...m, 
+        startMonth: newStartMonth, 
+        startYear: newStartYear,
+        endMonth: newEndMonth,
+        endYear: newEndYear
+      };
+    }));
+    
+    setDraggingEdge(null);
+    setDragPosition(null);
+  };
+
+  // Handle rename start (on double-click)
+  const handleRenameStart = (milestoneId, currentName, e) => {
+    e.stopPropagation();
+    setRenamingId(milestoneId);
+    setRenameValue(currentName);
+  };
+
+  // Handle rename save
+  const handleRenameSave = () => {
+    if (!renamingId || !renameValue.trim()) {
+      setRenamingId(null);
+      setRenameValue('');
+      return;
+    }
+
+    setMilestones(milestones.map(m => 
+      m.id === renamingId ? { ...m, name: renameValue.trim() } : m
+    ));
+
+    setRenamingId(null);
+    setRenameValue('');
+  };
+
+  // Handle rename cancel
+  const handleRenameCancel = () => {
+    setRenamingId(null);
+    setRenameValue('');
+  };
+
+  // Assign lanes to milestones to prevent overlaps
+  const assignLanes = (milestones) => {
+    if (milestones.length === 0) return { lanes: {}, totalLanes: 0 };
+    
+    const lanes = {};
+    
+    // No buffer needed for filleted edges - they don't extend beyond dates
+    const bufferTime = 0; // No time buffer
+    
+    // Helper to get buffered time range for a milestone
+    const getBufferedRange = (milestone) => {
+      const mStart = monthToDecimal(milestone.startMonth, milestone.startYear);
+      const mEnd = milestone.ongoing 
+        ? monthToDecimal(new Date().getMonth() + 1, new Date().getFullYear())
+        : monthToDecimal(milestone.endMonth, milestone.endYear);
+      return {
+        start: mStart - bufferTime,
+        end: mEnd + bufferTime
+      };
+    };
+    
+    // Sort by start date (oldest first)
+    const sorted = [...milestones].sort((a, b) => {
+      const aStart = monthToDecimal(a.startMonth, a.startYear);
+      const bStart = monthToDecimal(b.startMonth, b.startYear);
+      return aStart - bStart;
+    });
+    
+    // Track what ribbons are in each lane
+    const laneRibbons = []; // Array of arrays: [[ribbon1, ribbon2], [ribbon3], ...]
+    
+    // For each ribbon, find the leftmost lane where it fits
+    sorted.forEach(milestone => {
+      const range = getBufferedRange(milestone);
+      
+      // Check if it can fit in any existing lane
+      let assignedLane = -1;
+      
+      for (let laneIndex = 0; laneIndex < laneRibbons.length; laneIndex++) {
+        const ribbonsInLane = laneRibbons[laneIndex];
+        
+        // Check if this ribbon overlaps with any ribbon in this lane
+        const hasOverlap = ribbonsInLane.some(otherMilestone => {
+          const otherRange = getBufferedRange(otherMilestone);
+          return !(range.end < otherRange.start || range.start > otherRange.end);
+        });
+        
+        if (!hasOverlap) {
+          assignedLane = laneIndex;
+          break; // Found leftmost available lane
+        }
+      }
+      
+      // If no lane fits, create a new one
+      if (assignedLane === -1) {
+        assignedLane = laneRibbons.length;
+        laneRibbons.push([]);
+      }
+      
+      // Assign ribbon to lane
+      lanes[milestone.id] = assignedLane;
+      laneRibbons[assignedLane].push(milestone);
+    });
+    
+    const totalLanes = laneRibbons.length;
+    return { lanes, totalLanes };
+  };
+
+  // Assign lanes based on filtered milestones for tighter packing
+  const { lanes: milestoneLanes, totalLanes } = assignLanes(filteredMilestones);
+
+  // Generate ribbon path with filleted edges (rounded corners)
+  const generateRibbonPath = (milestone, lane, totalLanes) => {
+    const rawStartY = dateToY(milestone.startMonth, milestone.startYear);
+    const rawEndY = milestone.ongoing 
+      ? dateToY(new Date().getMonth() + 1, new Date().getFullYear())
+      : dateToY(milestone.endMonth, milestone.endYear);
+    
+    const ribbonWidth = 80;
+    const centerX = 400;
+    const laneSpacing = 80; // Match ribbon width - ribbons touch edge-to-edge
+    
+    // Calculate offset based on lane assignment
+    // Center the lanes around centerX
+    const totalWidth = totalLanes * laneSpacing;
+    const offset = lane * laneSpacing - (totalWidth / 2) + (laneSpacing / 2) - (ribbonWidth / 2);
+    
+    const x1 = centerX + offset;
+    const x2 = centerX + offset + ribbonWidth;
+    
+    // Calculate ribbon height (rawStartY > rawEndY because timeline is reversed)
+    let actualHeight = Math.abs(rawStartY - rawEndY);
+    
+    // IMPORTANT: Ensure minimum height for single-month or very short milestones
+    const MIN_RIBBON_HEIGHT = 50; // Minimum visible height
+    let ribbonHeight = actualHeight;
+    let displayStartY = rawStartY;
+    let displayEndY = rawEndY;
+    
+    if (actualHeight < MIN_RIBBON_HEIGHT && !milestone.ongoing) {
+      // For very short ribbons, expand equally in both directions around the center
+      ribbonHeight = MIN_RIBBON_HEIGHT;
+      const centerY = (rawStartY + rawEndY) / 2;
+      displayStartY = centerY + (MIN_RIBBON_HEIGHT / 2);  // Bottom (older)
+      displayEndY = centerY - (MIN_RIBBON_HEIGHT / 2);    // Top (newer)
+    }
+    
+    // Filleted corners - small radius for rounded corners
+    const cornerRadius = 16; // Fixed corner radius for filleted edges
+    
+    const startY = displayStartY; // Bottom edge (no inset needed)
+    const endY = milestone.ongoing ? rawEndY : displayEndY; // Top edge
+    
+    // Create flowing curves with control points for the sides
+    const cp1Y = startY + (endY - startY) * 0.3;
+    const cp2Y = startY + (endY - startY) * 0.7;
+    
+    let path;
+    
+    if (milestone.ongoing) {
+      // Ongoing: Rounded corners at bottom, flat/sharp top
+      path = `
+        M ${x1 + cornerRadius} ${startY}
+        L ${x2 - cornerRadius} ${startY}
+        Q ${x2} ${startY} ${x2} ${startY - cornerRadius}
+        C ${x2} ${cp1Y}, ${x2} ${cp2Y}, ${x2} ${endY}
+        L ${x1} ${endY}
+        C ${x1} ${cp2Y}, ${x1} ${cp1Y}, ${x1} ${startY - cornerRadius}
+        Q ${x1} ${startY} ${x1 + cornerRadius} ${startY}
+        Z
+      `;
+    } else {
+      // Completed: Rounded corners on all four corners
+      path = `
+        M ${x1 + cornerRadius} ${startY}
+        L ${x2 - cornerRadius} ${startY}
+        Q ${x2} ${startY} ${x2} ${startY - cornerRadius}
+        C ${x2} ${cp1Y}, ${x2} ${cp2Y}, ${x2} ${endY + cornerRadius}
+        Q ${x2} ${endY} ${x2 - cornerRadius} ${endY}
+        L ${x1 + cornerRadius} ${endY}
+        Q ${x1} ${endY} ${x1} ${endY + cornerRadius}
+        C ${x1} ${cp2Y}, ${x1} ${cp1Y}, ${x1} ${startY - cornerRadius}
+        Q ${x1} ${startY} ${x1 + cornerRadius} ${startY}
+        Z
+      `;
+    }
+    
+    return { path, startY: rawStartY, endY: rawEndY, x1, x2 };
+  };
+
+  const selectedMilestone = milestones.find(m => m.id === selectedId);
+
+  // Close export menus when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (showExportMenu && !event.target.closest('[data-export-menu]')) {
+        setShowExportMenu(false);
+      }
+      if (showDataExportMenu && !event.target.closest('[data-data-export-menu]')) {
+        setShowDataExportMenu(false);
+      }
+    };
+    
+    document.addEventListener('click', handleClickOutside);
+    return () => document.removeEventListener('click', handleClickOutside);
+  }, [showExportMenu, showDataExportMenu]);
+
+  // Validate formData category when categories change
+  useEffect(() => {
+    if (!categories[formData.category]) {
+      const firstCategory = Object.keys(categories)[0];
+      if (firstCategory) {
+        setFormData(prev => ({ ...prev, category: firstCategory }));
+      }
+    }
+  }, [categories, formData.category]);
+
+  return (
+    <div style={{
+      minHeight: '100vh',
+      background: 'linear-gradient(135deg, #fef3f4 0%, #f0f4fd 50%, #f3fbfc 100%)',
+      fontFamily: "'Syne', sans-serif"
+    }}>
+      <style>{`
+        /* Ensure proper viewport scaling */
+        html {
+          -webkit-text-size-adjust: 100%;
+          -ms-text-size-adjust: 100%;
+        }
+        
+        /* Smooth scrolling */
+        * {
+          -webkit-overflow-scrolling: touch;
+        }
+        
+        /* Touch-friendly buttons - minimum 44px tap targets */
+        button {
+          min-height: 44px;
+          min-width: 44px;
+          -webkit-tap-highlight-color: transparent;
+        }
+        
+        /* Tablet styles (481px - 1024px) */
+        @media (max-width: 1024px) {
+          .main-container {
+            gap: 2rem !important;
+            padding: 0 1rem !important;
+          }
+          
+          .timeline-container {
+            padding: 2rem 1rem !important;
+          }
+          
+          .sidebar {
+            width: 100% !important;
+            max-width: 100% !important;
+            position: static !important;
+          }
+          
+          .ribbon-details {
+            position: static !important;
+            margin-bottom: 1.5rem !important;
+          }
+        }
+        
+        /* Mobile styles (max 480px) */
+        @media (max-width: 480px) {
+          h1 {
+            font-size: 2rem !important;
+            letter-spacing: -0.01em !important;
+          }
+          
+          .main-container {
+            gap: 1rem !important;
+            padding: 0 0.5rem !important;
+            flex-direction: column-reverse !important;
+          }
+          
+          .header-buttons {
+            gap: 0.5rem !important;
+            flex-wrap: wrap !important;
+          }
+          
+          .header-buttons button {
+            padding: 0.5rem 1rem !important;
+            font-size: 0.875rem !important;
+          }
+          
+          .timeline-container {
+            padding: 1.5rem 0.75rem !important;
+            border-radius: 16px !important;
+          }
+          
+          .sidebar {
+            min-width: 100% !important;
+          }
+          
+          .category-box {
+            padding: 1.5rem !important;
+          }
+          
+          .ribbon-details {
+            padding: 1.5rem !important;
+          }
+          
+          /* Make modals full-screen on mobile */
+          .modal-overlay {
+            padding: 0 !important;
+          }
+          
+          .modal-content {
+            max-width: 100% !important;
+            width: 100% !important;
+            max-height: 100vh !important;
+            margin: 0 !important;
+            border-radius: 0 !important;
+            padding: 1.5rem !important;
+          }
+          
+          /* Better touch targets for form elements */
+          input, select, textarea {
+            font-size: 16px !important; /* Prevents iOS zoom */
+            min-height: 44px !important;
+            padding: 0.75rem !important;
+          }
+          
+          /* Stack form layout vertically */
+          .form-row {
+            flex-direction: column !important;
+          }
+          
+          .form-row > div {
+            width: 100% !important;
+          }
+        }
+        
+        /* Extra small phones */
+        @media (max-width: 360px) {
+          .timeline-container {
+            padding: 1rem 0.5rem !important;
+          }
+          
+          .category-box, .ribbon-details {
+            padding: 1rem !important;
+          }
+        }
+      `}</style>
+      {/* Header */}
+      <header style={{
+        padding: 'clamp(1.5rem, 5vw, 3rem) clamp(1rem, 3vw, 2rem) clamp(1rem, 3vw, 2rem)',
+        textAlign: 'center',
+        background: 'linear-gradient(180deg, rgba(255,255,255,0.9) 0%, rgba(255,255,255,0) 100%)',
+        backdropFilter: 'blur(10px)',
+        position: 'relative',
+        zIndex: 10
+      }}>
+        <h1 style={{
+          fontSize: 'clamp(2.5rem, 5vw, 4rem)',
+          fontWeight: 700,
+          background: 'linear-gradient(135deg, #8B5CF6, #EC4899, #F97316)',
+          WebkitBackgroundClip: 'text',
+          WebkitTextFillColor: 'transparent',
+          marginBottom: '0.5rem',
+          letterSpacing: '-0.02em'
+        }}>
+          Life Ribbons
+        </h1>
+        
+        <div className="header-buttons" style={{ display: 'flex', gap: '1rem', justifyContent: 'center', alignItems: 'center', flexWrap: 'wrap' }}>
+          <button
+            onClick={() => setShowForm(!showForm)}
+            style={{
+              padding: '0.75rem 2rem',
+              background: 'linear-gradient(135deg, #8B5CF6, #EC4899)',
+              color: 'white',
+              border: 'none',
+              borderRadius: '50px',
+              fontSize: '1rem',
+              fontWeight: 600,
+              cursor: 'pointer',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '0.5rem',
+              boxShadow: '0 10px 30px rgba(139, 92, 246, 0.3)',
+              transition: 'all 0.3s ease',
+              transform: showForm ? 'scale(0.95)' : 'scale(1)'
+            }}
+            onMouseEnter={(e) => e.target.style.transform = 'scale(1.05) translateY(-2px)'}
+            onMouseLeave={(e) => e.target.style.transform = showForm ? 'scale(0.95)' : 'scale(1)'}
+          >
+            {showForm ? <X size={20} /> : <Plus size={20} />}
+            {showForm ? 'Cancel' : 'Add Milestone'}
+          </button>
+
+
+          {/* Import Data */}
+          <input
+            ref={fileInputRef}
+            type="file"
+            accept=".csv,.json"
+            onChange={importData}
+            style={{ display: 'none' }}
+          />
+          <button
+            onClick={() => fileInputRef.current?.click()}
+            style={{
+              padding: '0.75rem 1.5rem',
+              background: 'white',
+              color: '#4B5563',
+              border: '2px solid #E5E7EB',
+              borderRadius: '50px',
+              fontSize: '1rem',
+              fontWeight: 600,
+              cursor: 'pointer',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '0.5rem',
+              transition: 'all 0.3s ease'
+            }}
+            onMouseEnter={(e) => {
+              e.target.style.transform = 'translateY(-2px)';
+              e.target.style.boxShadow = '0 10px 30px rgba(0, 0, 0, 0.1)';
+            }}
+            onMouseLeave={(e) => {
+              e.target.style.transform = 'translateY(0)';
+              e.target.style.boxShadow = 'none';
+            }}
+          >
+            <Upload size={20} />
+            Import Data
+          </button>
+
+          {/* Instructions */}
+          <button
+            onClick={() => setShowInstructions(true)}
+            style={{
+              padding: '0.75rem 1.5rem',
+              background: 'white',
+              color: '#4B5563',
+              border: '2px solid #E5E7EB',
+              borderRadius: '50px',
+              fontSize: '1rem',
+              fontWeight: 600,
+              cursor: 'pointer',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '0.5rem',
+              transition: 'all 0.3s ease'
+            }}
+            onMouseEnter={(e) => {
+              e.target.style.transform = 'translateY(-2px)';
+              e.target.style.boxShadow = '0 10px 30px rgba(0, 0, 0, 0.1)';
+            }}
+            onMouseLeave={(e) => {
+              e.target.style.transform = 'translateY(0)';
+              e.target.style.boxShadow = 'none';
+            }}
+          >
+            <HelpCircle size={20} />
+            Instructions
+          </button>
+
+          {/* Export Data */}
+          <div style={{ position: 'relative' }} data-data-export-menu>
+            <button
+              onClick={() => setShowDataExportMenu(!showDataExportMenu)}
+              style={{
+                padding: '0.75rem 1.5rem',
+                background: 'white',
+                color: '#4B5563',
+                border: '2px solid #E5E7EB',
+                borderRadius: '50px',
+                fontSize: '1rem',
+                fontWeight: 600,
+                cursor: 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '0.5rem',
+                transition: 'all 0.3s ease'
+              }}
+              onMouseEnter={(e) => {
+                e.target.style.transform = 'translateY(-2px)';
+                e.target.style.boxShadow = '0 10px 30px rgba(0, 0, 0, 0.1)';
+              }}
+              onMouseLeave={(e) => {
+                e.target.style.transform = 'translateY(0)';
+                e.target.style.boxShadow = 'none';
+              }}
+            >
+              <Download size={20} />
+              Export Data
+            </button>
+
+            {showDataExportMenu && (
+              <div style={{
+                position: 'absolute',
+                top: '100%',
+                right: 0,
+                marginTop: '0.5rem',
+                background: 'white',
+                borderRadius: '16px',
+                boxShadow: '0 10px 40px rgba(0, 0, 0, 0.15)',
+                overflow: 'hidden',
+                zIndex: 100,
+                animation: 'slideDown 0.3s cubic-bezier(0.34, 1.56, 0.64, 1)'
+              }}>
+                <button
+                  onClick={exportData}
+                  style={{
+                    width: '100%',
+                    padding: '1rem 1.5rem',
+                    background: 'white',
+                    color: '#4B5563',
+                    border: 'none',
+                    fontSize: '0.95rem',
+                    fontWeight: 600,
+                    cursor: 'pointer',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '0.75rem',
+                    transition: 'background 0.2s',
+                    textAlign: 'left'
+                  }}
+                  onMouseEnter={(e) => e.target.style.background = '#F9FAFB'}
+                  onMouseLeave={(e) => e.target.style.background = 'white'}
+                >
+                  <FileJson size={18} />
+                  Export as JSON
+                </button>
+                <button
+                  onClick={exportAsCSV}
+                  style={{
+                    width: '100%',
+                    padding: '1rem 1.5rem',
+                    background: 'white',
+                    color: '#4B5563',
+                    border: 'none',
+                    borderTop: '1px solid #F3F4F6',
+                    fontSize: '0.95rem',
+                    fontWeight: 600,
+                    cursor: 'pointer',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '0.75rem',
+                    transition: 'background 0.2s',
+                    textAlign: 'left'
+                  }}
+                  onMouseEnter={(e) => e.target.style.background = '#F9FAFB'}
+                  onMouseLeave={(e) => e.target.style.background = 'white'}
+                >
+                  <FileJson size={18} />
+                  Export as CSV
+                </button>
+              </div>
+            )}
+          </div>
+
+          {/* Export Visualization */}
+          <div style={{ position: 'relative' }} data-export-menu>
+            <button
+              onClick={() => setShowExportMenu(!showExportMenu)}
+              style={{
+                padding: '0.75rem 1.5rem',
+                background: 'white',
+                color: '#4B5563',
+                border: '2px solid #E5E7EB',
+                borderRadius: '50px',
+                fontSize: '1rem',
+                fontWeight: 600,
+                cursor: 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '0.5rem',
+                transition: 'all 0.3s ease'
+              }}
+              onMouseEnter={(e) => {
+                e.target.style.transform = 'translateY(-2px)';
+                e.target.style.boxShadow = '0 10px 30px rgba(0, 0, 0, 0.1)';
+              }}
+              onMouseLeave={(e) => {
+                e.target.style.transform = 'translateY(0)';
+                e.target.style.boxShadow = 'none';
+              }}
+            >
+              <Download size={20} />
+              Export Image
+            </button>
+
+            {showExportMenu && (
+              <div style={{
+                position: 'absolute',
+                top: '100%',
+                right: 0,
+                marginTop: '0.5rem',
+                background: 'white',
+                borderRadius: '16px',
+                boxShadow: '0 10px 40px rgba(0, 0, 0, 0.15)',
+                overflow: 'hidden',
+                zIndex: 100,
+                animation: 'slideDown 0.3s cubic-bezier(0.34, 1.56, 0.64, 1)'
+              }}>
+                <button
+                  onClick={exportAsSVG}
+                  style={{
+                    width: '100%',
+                    padding: '1rem 1.5rem',
+                    background: 'white',
+                    color: '#4B5563',
+                    border: 'none',
+                    fontSize: '0.95rem',
+                    fontWeight: 600,
+                    cursor: 'pointer',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '0.75rem',
+                    transition: 'background 0.2s',
+                    textAlign: 'left'
+                  }}
+                  onMouseEnter={(e) => e.target.style.background = '#F9FAFB'}
+                  onMouseLeave={(e) => e.target.style.background = 'white'}
+                >
+                  <FileJson size={18} />
+                  Export as SVG
+                </button>
+              </div>
+            )}
+          </div>
+        </div>
+      </header>
+
+      {/* Import Error Banner */}
+      {importErrors && (
+        <div style={{
+          position: 'fixed',
+          top: '100px',
+          left: '50%',
+          transform: 'translateX(-50%)',
+          width: '90%',
+          maxWidth: '800px',
+          background: '#FEE2E2',
+          border: '2px solid #DC2626',
+          borderRadius: '16px',
+          padding: '1.5rem',
+          boxShadow: '0 10px 40px rgba(220, 38, 38, 0.3)',
+          zIndex: 2000,
+          animation: 'slideDown 0.4s cubic-bezier(0.34, 1.56, 0.64, 1)'
+        }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+            <div style={{ flex: 1 }}>
+              <h3 style={{
+                margin: '0 0 1rem 0',
+                color: '#991B1B',
+                fontSize: '1.25rem',
+                fontWeight: 700,
+                display: 'flex',
+                alignItems: 'center',
+                gap: '0.5rem'
+              }}>
+                ⚠️ Import Warning
+              </h3>
+              <p style={{
+                margin: '0 0 1rem 0',
+                color: '#7F1D1D',
+                fontSize: '1rem',
+                fontWeight: 500
+              }}>
+                ✓ {importErrors.imported} milestone(s) imported successfully
+                <br />
+                ✗ {importErrors.errors.length} milestone(s) skipped due to validation errors:
+              </p>
+              <ul style={{
+                margin: 0,
+                paddingLeft: '1.5rem',
+                color: '#7F1D1D',
+                fontSize: '0.95rem'
+              }}>
+                {importErrors.errors.map((error, index) => (
+                  <li key={index} style={{ marginBottom: '0.5rem' }}>
+                    <strong>{error.name}:</strong> {error.reason}
+                  </li>
+                ))}
+              </ul>
+            </div>
+            <button
+              onClick={() => setImportErrors(null)}
+              style={{
+                background: '#DC2626',
+                border: 'none',
+                borderRadius: '8px',
+                width: '32px',
+                height: '32px',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                cursor: 'pointer',
+                flexShrink: 0,
+                marginLeft: '1rem',
+                transition: 'all 0.2s'
+              }}
+              onMouseEnter={(e) => {
+                e.target.style.background = '#B91C1C';
+                e.target.style.transform = 'scale(1.1)';
+              }}
+              onMouseLeave={(e) => {
+                e.target.style.background = '#DC2626';
+                e.target.style.transform = 'scale(1)';
+              }}
+              title="Close"
+            >
+              <X size={20} color="white" />
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* Instructions Modal */}
+      {showInstructions && (
+        <div 
+          className="modal-overlay"
+          onClick={(e) => {
+            if (e.target === e.currentTarget) {
+              setShowInstructions(false);
+            }
+          }}
+          style={{
+            position: 'fixed',
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            background: 'rgba(0, 0, 0, 0.5)',
+            backdropFilter: 'blur(8px)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            zIndex: 1000,
+            padding: '1rem',
+            animation: 'fadeIn 0.3s ease'
+          }}>
+          <div 
+            className="modal-content"
+            onClick={(e) => {
+              e.stopPropagation();
+            }}
+            style={{
+              background: 'white',
+              padding: '2.5rem',
+              borderRadius: '24px',
+              maxWidth: '700px',
+              width: '100%',
+              maxHeight: '90vh',
+              overflowY: 'auto',
+              boxShadow: '0 20px 60px rgba(0, 0, 0, 0.3)',
+              animation: 'slideUp 0.4s cubic-bezier(0.34, 1.56, 0.64, 1)'
+            }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2rem' }}>
+              <h2 style={{ 
+                fontSize: '1.75rem', 
+                color: '#1F2937',
+                fontWeight: 700,
+                margin: 0
+              }}>
+                Welcome to Life Ribbons
+              </h2>
+              <button
+                onClick={() => setShowInstructions(false)}
+                style={{
+                  background: '#F3F4F6',
+                  border: 'none',
+                  borderRadius: '8px',
+                  width: '32px',
+                  height: '32px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  cursor: 'pointer',
+                  transition: 'all 0.2s'
+                }}
+                onMouseEnter={(e) => e.target.style.background = '#E5E7EB'}
+                onMouseLeave={(e) => e.target.style.background = '#F3F4F6'}
+              >
+                <X size={18} />
+              </button>
+            </div>
+
+            <div style={{ lineHeight: '1.8', color: '#4B5563', fontSize: '1rem' }}>
+              <h3 style={{ fontSize: '1.125rem', fontWeight: 600, color: '#1F2937', marginTop: '0', marginBottom: '0.75rem' }}>
+                🎯 Why Life Ribbons?
+              </h3>
+              <p style={{ marginBottom: '1rem' }}>
+                Life Ribbons was created as a way to <strong>visualize time commitment over time</strong>. It supplements the Yerkes-Dodson Law—the idea that peak performance is a balance between being stimulated and not over-stimulated. This tool helps you:
+              </p>
+              <ul style={{ marginBottom: '1.5rem', paddingLeft: '1.5rem' }}>
+                <li>See your life commitments at a glance</li>
+                <li>Track potential paths you're considering</li>
+                <li>Reflect on what you've done and where you're going</li>
+                <li>Find balance in your life's activities</li>
+              </ul>
+
+              <h3 style={{ fontSize: '1.125rem', fontWeight: 600, color: '#1F2937', marginTop: '1.5rem', marginBottom: '0.75rem' }}>
+                ✨ Key Features
+              </h3>
+              <ul style={{ marginBottom: '1rem', paddingLeft: '1.5rem' }}>
+                <li><strong>Milestones:</strong> Add life events with start/end dates, or mark them as ongoing</li>
+                <li><strong>Categories:</strong> Organize by category (Education, Career, Health, etc.) with custom colors</li>
+                <li><strong>Sub-events:</strong> Add important moments within each milestone (shown as diamonds)</li>
+                <li><strong>Hypothetical milestones:</strong> Plan future goals with dashed ribbons</li>
+                <li><strong>Interactive editing:</strong> Drag ribbon edges to resize, double-click names to rename</li>
+                <li><strong>Filtering:</strong> Click category boxes in the legend to show/hide categories</li>
+                <li><strong>Export & Import:</strong> Save as JSON, CSV, or SVG image</li>
+              </ul>
+
+              <h3 style={{ fontSize: '1.125rem', fontWeight: 600, color: '#1F2937', marginTop: '1.5rem', marginBottom: '0.75rem' }}>
+                🚀 Getting Started
+              </h3>
+              <ol style={{ marginBottom: '1rem', paddingLeft: '1.5rem' }}>
+                <li>Click <strong>"Add Milestone"</strong> to create your first life event</li>
+                <li>Fill in the name, category, and dates</li>
+                <li>Add sub-events for important moments within that milestone</li>
+                <li>Click on any ribbon to see details in the sidebar</li>
+                <li>Use <strong>"Manage Categories"</strong> (✎ button) to customize colors</li>
+              </ol>
+
+              <h3 style={{ fontSize: '1.125rem', fontWeight: 600, color: '#1F2937', marginTop: '1.5rem', marginBottom: '0.75rem' }}>
+                🎨 Interactive Tips
+              </h3>
+              <ul style={{ marginBottom: '1rem', paddingLeft: '1.5rem' }}>
+                <li><strong>Resize ribbons:</strong> Hover over a ribbon edge, then drag to adjust dates</li>
+                <li><strong>Rename quickly:</strong> Double-click any ribbon's name to edit it in place</li>
+                <li><strong>Filter view:</strong> Click colored boxes in the category legend to show/hide</li>
+                <li><strong>Auto-fix dates:</strong> If you enter dates backwards, they'll swap automatically</li>
+                <li><strong>Diamond markers:</strong> Hover over diamonds to see sub-event names</li>
+              </ul>
+
+              <div style={{ 
+                marginTop: '1.5rem', 
+                padding: '1rem 1.25rem', 
+                background: '#EEF2FF', 
+                borderRadius: '12px',
+                border: '2px solid #8B5CF6'
+              }}>
+                <p style={{ margin: 0, color: '#5B21B6', fontWeight: 500 }}>
+                  💡 <strong>Tip:</strong> Your timeline flows from oldest (bottom) to newest (top). The year spacing adjusts automatically based on your longest milestone name!
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Add/Edit Form */}
+      {showForm && (
+        <div 
+          className="modal-overlay"
+          onClick={(e) => {
+            // Only close if clicking the backdrop, not the form
+            if (e.target === e.currentTarget) {
+              resetForm();
+            }
+          }}
+          style={{
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          background: 'rgba(0, 0, 0, 0.5)',
+          backdropFilter: 'blur(8px)',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          zIndex: 1000,
+          padding: '1rem',
+          animation: 'fadeIn 0.3s ease'
+        }}>
+          <div 
+            className="modal-content"
+            onClick={(e) => {
+              e.stopPropagation();
+            }}
+            style={{
+            background: 'white',
+            padding: '2.5rem',
+            borderRadius: '24px',
+            maxWidth: '600px',
+            width: '100%',
+            maxHeight: '90vh',
+            overflowY: 'auto',
+            boxShadow: '0 20px 60px rgba(0, 0, 0, 0.3)',
+            animation: 'slideUp 0.4s cubic-bezier(0.34, 1.56, 0.64, 1)'
+          }}>
+            <h2 style={{ 
+              fontSize: '1.75rem', 
+              marginBottom: '1.5rem',
+              color: '#1F2937',
+              fontWeight: 700
+            }}>
+              {editingId ? 'Edit Milestone' : 'New Milestone'}
+            </h2>
+            
+            {/* Error Message */}
+            {formError && (
+              <div style={{
+                padding: '1rem 1.25rem',
+                background: '#FEE2E2',
+                border: '2px solid #EF4444',
+                borderRadius: '12px',
+                marginBottom: '1rem',
+                animation: 'slideDown 0.3s ease'
+              }}>
+                <div style={{
+                  color: '#DC2626',
+                  fontSize: '0.875rem',
+                  fontWeight: 600,
+                  lineHeight: '1.5'
+                }}>
+                  {formError}
+                </div>
+              </div>
+            )}
+            
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
+              <div>
+                <label style={{ display: 'block', marginBottom: '0.5rem', color: '#4B5563', fontSize: '0.875rem', fontWeight: 500 }}>
+                  Event Name
+                </label>
+                <input
+                  type="text"
+                  value={formData.name}
+                  onChange={(e) => setFormData({...formData, name: e.target.value})}
+                  placeholder="e.g., Started college, Got married..."
+                  style={{
+                    width: '100%',
+                    padding: '0.875rem',
+                    borderRadius: '12px',
+                    border: '2px solid #E5E7EB',
+                    fontSize: '1rem',
+                    fontFamily: 'inherit',
+                    transition: 'border-color 0.2s'
+                  }}
+                  onFocus={(e) => e.target.style.borderColor = '#8B5CF6'}
+                  onBlur={(e) => e.target.style.borderColor = '#E5E7EB'}
+                />
+              </div>
+
+              <div>
+                <label style={{ display: 'block', marginBottom: '0.5rem', color: '#4B5563', fontSize: '0.875rem', fontWeight: 500 }}>
+                  Category
+                </label>
+                <select
+                  value={formData.category}
+                  onChange={(e) => setFormData({...formData, category: e.target.value})}
+                  style={{
+                    width: '100%',
+                    padding: '0.875rem',
+                    borderRadius: '12px',
+                    border: '2px solid #E5E7EB',
+                    fontSize: '1rem',
+                    fontFamily: 'inherit',
+                    background: 'white',
+                    cursor: 'pointer'
+                  }}
+                >
+                  {Object.keys(categories).map(cat => (
+                    <option key={cat} value={cat}>{cat}</option>
+                  ))}
+                </select>
+              </div>
+
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
+                <div>
+                  <label style={{ display: 'block', marginBottom: '0.5rem', color: '#4B5563', fontSize: '0.875rem', fontWeight: 500 }}>
+                    Start Month
+                  </label>
+                  <select
+                    value={formData.startMonth}
+                    onChange={(e) => setFormData({...formData, startMonth: parseInt(e.target.value)})}
+                    style={{
+                      width: '100%',
+                      padding: '0.875rem',
+                      borderRadius: '12px',
+                      border: '2px solid #E5E7EB',
+                      fontSize: '1rem',
+                      fontFamily: 'inherit',
+                      background: 'white'
+                    }}
+                  >
+                    {Array.from({length: 12}, (_, i) => (
+                      <option key={i + 1} value={i + 1}>
+                        {new Date(2000, i).toLocaleString('default', { month: 'short' })}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+                
+                <div>
+                  <label style={{ display: 'block', marginBottom: '0.5rem', color: '#4B5563', fontSize: '0.875rem', fontWeight: 500 }}>
+                    Start Year
+                  </label>
+                  <input
+                    type="number"
+                    min="1900"
+                    max="2100"
+                    value={formData.startYear}
+                    onChange={(e) => {
+                      const value = e.target.value;
+                      setFormData({...formData, startYear: value === '' ? '' : parseInt(value)});
+                    }}
+                    style={{
+                      width: '100%',
+                      padding: '0.875rem',
+                      borderRadius: '12px',
+                      border: '2px solid #E5E7EB',
+                      fontSize: '1rem',
+                      fontFamily: 'inherit'
+                    }}
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label style={{ 
+                  display: 'flex', 
+                  alignItems: 'center', 
+                  gap: '0.5rem',
+                  cursor: 'pointer',
+                  color: '#4B5563',
+                  fontSize: '0.875rem',
+                  fontWeight: 500
+                }}>
+                  <input
+                    type="checkbox"
+                    checked={formData.ongoing}
+                    onChange={(e) => setFormData({...formData, ongoing: e.target.checked})}
+                    style={{ width: '18px', height: '18px', cursor: 'pointer' }}
+                  />
+                  This milestone is ongoing
+                </label>
+              </div>
+
+              <div>
+                <label style={{ 
+                  display: 'flex', 
+                  alignItems: 'center', 
+                  gap: '0.5rem',
+                  cursor: 'pointer',
+                  color: '#4B5563',
+                  fontSize: '0.875rem',
+                  fontWeight: 500
+                }}>
+                  <input
+                    type="checkbox"
+                    checked={formData.hypothetical}
+                    onChange={(e) => setFormData({...formData, hypothetical: e.target.checked})}
+                    style={{ width: '18px', height: '18px', cursor: 'pointer' }}
+                  />
+                  This is a hypothetical/potential milestone
+                </label>
+              </div>
+
+              {!formData.ongoing && (
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
+                  <div>
+                    <label style={{ display: 'block', marginBottom: '0.5rem', color: '#4B5563', fontSize: '0.875rem', fontWeight: 500 }}>
+                      End Month
+                    </label>
+                    <select
+                      value={formData.endMonth}
+                      onChange={(e) => setFormData({...formData, endMonth: parseInt(e.target.value)})}
+                      style={{
+                        width: '100%',
+                        padding: '0.875rem',
+                        borderRadius: '12px',
+                        border: '2px solid #E5E7EB',
+                        fontSize: '1rem',
+                        fontFamily: 'inherit',
+                        background: 'white'
+                      }}
+                    >
+                      {Array.from({length: 12}, (_, i) => (
+                        <option key={i + 1} value={i + 1}>
+                          {new Date(2000, i).toLocaleString('default', { month: 'short' })}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                  
+                  <div>
+                    <label style={{ display: 'block', marginBottom: '0.5rem', color: '#4B5563', fontSize: '0.875rem', fontWeight: 500 }}>
+                      End Year
+                    </label>
+                    <input
+                      type="number"
+                      min="1900"
+                      max="2100"
+                      value={formData.endYear}
+                      onChange={(e) => {
+                        const value = e.target.value;
+                        setFormData({...formData, endYear: value === '' ? '' : parseInt(value)});
+                      }}
+                      style={{
+                        width: '100%',
+                        padding: '0.875rem',
+                        borderRadius: '12px',
+                        border: '2px solid #E5E7EB',
+                        fontSize: '1rem',
+                        fontFamily: 'inherit'
+                      }}
+                    />
+                  </div>
+                </div>
+              )}
+
+              {/* Sub-events Section */}
+              <div style={{
+                marginTop: '0.5rem',
+                padding: '1.25rem',
+                background: '#F9FAFB',
+                borderRadius: '12px',
+                border: '2px dashed #E5E7EB'
+              }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
+                  <label style={{ color: '#4B5563', fontSize: '0.875rem', fontWeight: 600 }}>
+                    Sub-Events (Optional)
+                  </label>
+                  <button
+                    type="button"
+                    onClick={addSubEvent}
+                    style={{
+                      padding: '0.5rem 1rem',
+                      background: 'linear-gradient(135deg, #8B5CF6, #EC4899)',
+                      color: 'white',
+                      border: 'none',
+                      borderRadius: '8px',
+                      fontSize: '0.813rem',
+                      fontWeight: 600,
+                      cursor: 'pointer',
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '0.25rem',
+                      transition: 'all 0.2s'
+                    }}
+                    onMouseEnter={(e) => e.target.style.transform = 'scale(1.05)'}
+                    onMouseLeave={(e) => e.target.style.transform = 'scale(1)'}
+                  >
+                    <Plus size={14} />
+                    Add
+                  </button>
+                </div>
+
+                {formData.subEvents && formData.subEvents.length > 0 ? (
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+                    {formData.subEvents.map((subEvent) => (
+                      <div key={subEvent.id} style={{
+                        display: 'grid',
+                        gridTemplateColumns: '2fr 1fr 1fr auto',
+                        gap: '0.5rem',
+                        alignItems: 'end',
+                        padding: '0.75rem',
+                        background: 'white',
+                        borderRadius: '8px',
+                        border: '1px solid #E5E7EB'
+                      }}>
+                        <div>
+                          <label style={{ display: 'block', marginBottom: '0.25rem', color: '#6B7280', fontSize: '0.75rem', fontWeight: 500 }}>
+                            Name
+                          </label>
+                          <input
+                            type="text"
+                            value={subEvent.name}
+                            onChange={(e) => updateSubEvent(subEvent.id, 'name', e.target.value)}
+                            placeholder="e.g., Finance 101"
+                            style={{
+                              width: '100%',
+                              padding: '0.5rem',
+                              borderRadius: '6px',
+                              border: '1px solid #E5E7EB',
+                              fontSize: '0.875rem',
+                              fontFamily: 'inherit'
+                            }}
+                          />
+                        </div>
+                        <div>
+                          <label style={{ display: 'block', marginBottom: '0.25rem', color: '#6B7280', fontSize: '0.75rem', fontWeight: 500 }}>
+                            Month
+                          </label>
+                          <select
+                            value={subEvent.month}
+                            onChange={(e) => updateSubEvent(subEvent.id, 'month', parseInt(e.target.value))}
+                            style={{
+                              width: '100%',
+                              padding: '0.5rem',
+                              borderRadius: '6px',
+                              border: '1px solid #E5E7EB',
+                              fontSize: '0.875rem',
+                              fontFamily: 'inherit',
+                              background: 'white'
+                            }}
+                          >
+                            {Array.from({length: 12}, (_, i) => (
+                              <option key={i + 1} value={i + 1}>
+                                {new Date(2000, i).toLocaleString('default', { month: 'short' })}
+                              </option>
+                            ))}
+                          </select>
+                        </div>
+                        <div>
+                          <label style={{ display: 'block', marginBottom: '0.25rem', color: '#6B7280', fontSize: '0.75rem', fontWeight: 500 }}>
+                            Year
+                          </label>
+                          <input
+                            type="number"
+                            value={subEvent.year}
+                            onChange={(e) => {
+                              const value = e.target.value;
+                              updateSubEvent(subEvent.id, 'year', value === '' ? '' : parseInt(value));
+                            }}
+                            style={{
+                              width: '100%',
+                              padding: '0.5rem',
+                              borderRadius: '6px',
+                              border: '1px solid #E5E7EB',
+                              fontSize: '0.875rem',
+                              fontFamily: 'inherit'
+                            }}
+                          />
+                        </div>
+                        <button
+                          type="button"
+                          onClick={() => removeSubEvent(subEvent.id)}
+                          style={{
+                            padding: '0.5rem',
+                            background: '#FEE2E2',
+                            color: '#DC2626',
+                            border: 'none',
+                            borderRadius: '6px',
+                            cursor: 'pointer',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            transition: 'all 0.2s'
+                          }}
+                          onMouseEnter={(e) => e.target.style.background = '#FECACA'}
+                          onMouseLeave={(e) => e.target.style.background = '#FEE2E2'}
+                        >
+                          <Trash2 size={14} />
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <p style={{ 
+                    color: '#9CA3AF', 
+                    fontSize: '0.813rem',
+                    fontStyle: 'italic',
+                    textAlign: 'center',
+                    margin: '0.5rem 0'
+                  }}>
+                    No sub-events yet. Click "Add" to create markers within this milestone.
+                  </p>
+                )}
+              </div>
+
+              <div style={{ display: 'flex', gap: '1rem', marginTop: '0.5rem' }}>
+                <button
+                  type="button"
+                  onClick={resetForm}
+                  style={{
+                    flex: 1,
+                    padding: '0.875rem',
+                    background: '#F3F4F6',
+                    color: '#4B5563',
+                    border: 'none',
+                    borderRadius: '12px',
+                    fontSize: '1rem',
+                    fontWeight: 600,
+                    cursor: 'pointer',
+                    transition: 'all 0.2s'
+                  }}
+                  onMouseEnter={(e) => e.target.style.background = '#E5E7EB'}
+                  onMouseLeave={(e) => e.target.style.background = '#F3F4F6'}
+                >
+                  Cancel
+                </button>
+                <button
+                  type="button"
+                  onClick={(e) => {
+                    handleSubmit(e);
+                  }}
+                  style={{
+                    flex: 1,
+                    padding: '0.875rem',
+                    background: 'linear-gradient(135deg, #8B5CF6, #EC4899)',
+                    color: 'white',
+                    border: 'none',
+                    borderRadius: '12px',
+                    fontSize: '1rem',
+                    fontWeight: 600,
+                    cursor: 'pointer',
+                    pointerEvents: 'auto',
+                    boxShadow: '0 4px 12px rgba(139, 92, 246, 0.3)',
+                    transition: 'all 0.2s',
+                    position: 'relative',
+                    zIndex: 10
+                  }}
+                  onMouseEnter={(e) => e.target.style.transform = 'translateY(-2px)'}
+                  onMouseLeave={(e) => e.target.style.transform = 'translateY(0)'}
+                >
+                  {editingId ? 'Update' : 'Add'} Milestone
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Category Manager Modal */}
+      {showCategoryManager && (
+        <div 
+          onClick={(e) => {
+            // Only close if clicking the backdrop, not the modal content
+            if (e.target === e.currentTarget) {
+              setShowCategoryManager(false);
+              cancelEditingCategory(); // Reset any ongoing edit
+            }
+          }}
+          style={{
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          background: 'rgba(0, 0, 0, 0.5)',
+          backdropFilter: 'blur(8px)',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          zIndex: 1000,
+          padding: '1rem',
+          animation: 'fadeIn 0.3s ease'
+        }}>
+          <div 
+            onClick={(e) => {
+              e.stopPropagation();
+            }}
+            style={{
+            background: 'white',
+            padding: '2.5rem',
+            borderRadius: '24px',
+            maxWidth: '600px',
+            width: '100%',
+            maxHeight: '90vh',
+            overflowY: 'auto',
+            boxShadow: '0 20px 60px rgba(0, 0, 0, 0.3)',
+            animation: 'slideUp 0.4s cubic-bezier(0.34, 1.56, 0.64, 1)'
+          }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2rem' }}>
+              <h2 style={{ 
+                fontSize: '1.75rem', 
+                color: '#1F2937',
+                fontWeight: 700,
+                margin: 0
+              }}>
+                Manage Categories
+              </h2>
+              <button
+                onClick={() => setShowCategoryManager(false)}
+                style={{
+                  background: '#F3F4F6',
+                  border: 'none',
+                  borderRadius: '8px',
+                  width: '32px',
+                  height: '32px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  cursor: 'pointer',
+                  transition: 'all 0.2s'
+                }}
+                onMouseEnter={(e) => e.target.style.background = '#E5E7EB'}
+                onMouseLeave={(e) => e.target.style.background = '#F3F4F6'}
+              >
+                <X size={18} />
+              </button>
+            </div>
+
+            {/* Add New Category */}
+            <div style={{
+              padding: '1.5rem',
+              background: '#F9FAFB',
+              borderRadius: '12px',
+              marginBottom: '2rem'
+            }}>
+              <h3 style={{ 
+                fontSize: '1rem',
+                color: '#4B5563',
+                fontWeight: 600,
+                marginBottom: '1rem'
+              }}>
+                Add New Category
+              </h3>
+              <div style={{ display: 'flex', gap: '1rem', alignItems: 'end', flexWrap: 'wrap' }}>
+                <div style={{ flex: 1, minWidth: '200px' }}>
+                  <label style={{ display: 'block', marginBottom: '0.5rem', color: '#6B7280', fontSize: '0.875rem', fontWeight: 500 }}>
+                    Category Name
+                  </label>
+                  <input
+                    type="text"
+                    value={newCategoryName}
+                    onChange={(e) => setNewCategoryName(e.target.value)}
+                    placeholder="e.g., Fitness, Projects..."
+                    style={{
+                      width: '100%',
+                      padding: '0.875rem',
+                      borderRadius: '12px',
+                      border: '2px solid #E5E7EB',
+                      fontSize: '1rem',
+                      fontFamily: 'inherit'
+                    }}
+                    onKeyPress={(e) => {
+                      if (e.key === 'Enter') addCategory();
+                    }}
+                  />
+                </div>
+                <div>
+                  <label style={{ display: 'block', marginBottom: '0.5rem', color: '#6B7280', fontSize: '0.875rem', fontWeight: 500 }}>
+                    Color
+                  </label>
+                  <div style={{ display: 'flex', gap: '0.5rem' }}>
+                    <input
+                      type="color"
+                      value={newCategoryColor}
+                      onChange={(e) => setNewCategoryColor(e.target.value)}
+                      style={{
+                        width: '60px',
+                        height: '48px',
+                        borderRadius: '12px',
+                        border: '2px solid #E5E7EB',
+                        cursor: 'pointer',
+                        padding: '4px'
+                      }}
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setNewCategoryColor(generateRandomColor())}
+                      style={{
+                        padding: '0 1rem',
+                        background: '#F3F4F6',
+                        color: '#4B5563',
+                        border: 'none',
+                        borderRadius: '12px',
+                        fontSize: '0.875rem',
+                        fontWeight: 600,
+                        cursor: 'pointer',
+                        transition: 'all 0.2s',
+                        whiteSpace: 'nowrap'
+                      }}
+                      onMouseEnter={(e) => e.target.style.background = '#E5E7EB'}
+                      onMouseLeave={(e) => e.target.style.background = '#F3F4F6'}
+                    >
+                      Random
+                    </button>
+                  </div>
+                </div>
+                <button
+                  onClick={addCategory}
+                  style={{
+                    padding: '0.875rem 1.5rem',
+                    background: 'linear-gradient(135deg, #8B5CF6, #EC4899)',
+                    color: 'white',
+                    border: 'none',
+                    borderRadius: '12px',
+                    fontSize: '1rem',
+                    fontWeight: 600,
+                    cursor: 'pointer',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '0.5rem',
+                    transition: 'all 0.2s'
+                  }}
+                  onMouseEnter={(e) => e.target.style.transform = 'translateY(-2px)'}
+                  onMouseLeave={(e) => e.target.style.transform = 'translateY(0)'}
+                >
+                  <Plus size={18} />
+                  Add
+                </button>
+              </div>
+            </div>
+
+            {/* Existing Categories */}
+            <div>
+              <h3 style={{ 
+                fontSize: '1rem',
+                color: '#4B5563',
+                fontWeight: 600,
+                marginBottom: '1rem'
+              }}>
+                Existing Categories ({Object.keys(categories).length})
+              </h3>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+                {Object.entries(categories).map(([name, color]) => {
+                  const count = milestones.filter(m => m.category === name).length;
+                  const isEditing = editingCategory === name;
+                  
+                  return (
+                    <div
+                      key={name}
+                      style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '1rem',
+                        padding: '1rem',
+                        background: isEditing ? '#EEF2FF' : '#F9FAFB',
+                        borderRadius: '12px',
+                        border: isEditing ? '2px solid #8B5CF6' : 'none',
+                        transition: 'background 0.2s'
+                      }}
+                      onMouseEnter={(e) => !isEditing && (e.currentTarget.style.background = '#F3F4F6')}
+                      onMouseLeave={(e) => !isEditing && (e.currentTarget.style.background = '#F9FAFB')}
+                    >
+                      {isEditing ? (
+                        <>
+                          {/* Edit Mode */}
+                          <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
+                            <input
+                              type="color"
+                              value={editCategoryColor}
+                              onChange={(e) => setEditCategoryColor(e.target.value)}
+                              style={{
+                                width: '40px',
+                                height: '40px',
+                                borderRadius: '10px',
+                                border: '2px solid #E5E7EB',
+                                cursor: 'pointer',
+                                padding: '2px',
+                                flexShrink: 0
+                              }}
+                            />
+                            <button
+                              type="button"
+                              onClick={() => setEditCategoryColor(generateRandomColor())}
+                              style={{
+                                padding: '0.5rem 0.75rem',
+                                background: '#F3F4F6',
+                                color: '#4B5563',
+                                border: 'none',
+                                borderRadius: '8px',
+                                fontSize: '0.75rem',
+                                fontWeight: 600,
+                                cursor: 'pointer',
+                                transition: 'all 0.2s',
+                                whiteSpace: 'nowrap'
+                              }}
+                              onMouseEnter={(e) => e.target.style.background = '#E5E7EB'}
+                              onMouseLeave={(e) => e.target.style.background = '#F3F4F6'}
+                            >
+                              Random
+                            </button>
+                          </div>
+                          <input
+                            type="text"
+                            value={editCategoryName}
+                            onChange={(e) => setEditCategoryName(e.target.value)}
+                            style={{
+                              flex: 1,
+                              padding: '0.5rem',
+                              borderRadius: '8px',
+                              border: '2px solid #8B5CF6',
+                              fontSize: '1rem',
+                              fontFamily: 'inherit',
+                              fontWeight: 600
+                            }}
+                            onKeyPress={(e) => {
+                              if (e.key === 'Enter') updateCategory();
+                            }}
+                            autoFocus
+                          />
+                          <button
+                            onClick={updateCategory}
+                            style={{
+                              padding: '0.5rem 1rem',
+                              background: '#8B5CF6',
+                              color: 'white',
+                              border: 'none',
+                              borderRadius: '8px',
+                              fontSize: '0.875rem',
+                              fontWeight: 600,
+                              cursor: 'pointer',
+                              display: 'flex',
+                              alignItems: 'center',
+                              gap: '0.375rem',
+                              transition: 'all 0.2s'
+                            }}
+                            onMouseEnter={(e) => e.target.style.background = '#7C3AED'}
+                            onMouseLeave={(e) => e.target.style.background = '#8B5CF6'}
+                          >
+                            <Check size={14} />
+                            Save
+                          </button>
+                          <button
+                            onClick={cancelEditingCategory}
+                            style={{
+                              padding: '0.5rem',
+                              background: '#F3F4F6',
+                              color: '#6B7280',
+                              border: 'none',
+                              borderRadius: '8px',
+                              cursor: 'pointer',
+                              display: 'flex',
+                              alignItems: 'center',
+                              transition: 'all 0.2s'
+                            }}
+                            onMouseEnter={(e) => e.target.style.background = '#E5E7EB'}
+                            onMouseLeave={(e) => e.target.style.background = '#F3F4F6'}
+                          >
+                            <X size={14} />
+                          </button>
+                        </>
+                      ) : (
+                        <>
+                          {/* View Mode */}
+                          <div style={{
+                            width: '40px',
+                            height: '40px',
+                            borderRadius: '10px',
+                            background: color,
+                            boxShadow: `0 4px 12px ${color}40`,
+                            flexShrink: 0
+                          }} />
+                          <div style={{ flex: 1 }}>
+                            <div style={{ 
+                              color: '#1F2937',
+                              fontWeight: 600,
+                              fontSize: '1rem'
+                            }}>
+                              {name}
+                            </div>
+                            <div style={{ 
+                              color: '#9CA3AF',
+                              fontSize: '0.813rem',
+                              marginTop: '0.125rem'
+                            }}>
+                              {count} milestone{count !== 1 ? 's' : ''}
+                            </div>
+                          </div>
+                          <button
+                            onClick={() => startEditingCategory(name)}
+                            style={{
+                              padding: '0.5rem 1rem',
+                              background: '#EEF2FF',
+                              color: '#8B5CF6',
+                              border: 'none',
+                              borderRadius: '8px',
+                              fontSize: '0.875rem',
+                              fontWeight: 600,
+                              cursor: 'pointer',
+                              display: 'flex',
+                              alignItems: 'center',
+                              gap: '0.375rem',
+                              transition: 'all 0.2s'
+                            }}
+                            onMouseEnter={(e) => {
+                              e.target.style.background = '#DDD6FE';
+                              e.target.style.transform = 'scale(1.05)';
+                            }}
+                            onMouseLeave={(e) => {
+                              e.target.style.background = '#EEF2FF';
+                              e.target.style.transform = 'scale(1)';
+                            }}
+                          >
+                            <Edit2 size={14} />
+                            Edit
+                          </button>
+                          <button
+                            onClick={() => deleteCategory(name)}
+                            style={{
+                              padding: '0.5rem 1rem',
+                              background: '#FEE2E2',
+                              color: '#DC2626',
+                              border: 'none',
+                              borderRadius: '8px',
+                              fontSize: '0.875rem',
+                              fontWeight: 600,
+                              cursor: 'pointer',
+                              display: 'flex',
+                              alignItems: 'center',
+                              gap: '0.375rem',
+                              transition: 'all 0.2s'
+                            }}
+                            onMouseEnter={(e) => {
+                              e.target.style.background = '#FECACA';
+                              e.target.style.transform = 'scale(1.05)';
+                            }}
+                            onMouseLeave={(e) => {
+                              e.target.style.background = '#FEE2E2';
+                              e.target.style.transform = 'scale(1)';
+                            }}
+                          >
+                            <Trash2 size={14} />
+                            Delete
+                          </button>
+                        </>
+                      )}
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Odyssey Planning Form */}
+      <main style={{
+        maxWidth: '1400px',
+        margin: '0 auto',
+        padding: '2rem 1rem 4rem',
+        position: 'relative'
+      }}>
+        <div className="responsive-container" style={{
+          display: 'flex',
+          gap: '3rem',
+          justifyContent: 'center',
+          alignItems: 'flex-start',
+          flexWrap: 'wrap',
+          padding: '0 1rem'
+        }}>
+          {/* SVG Timeline */}
+          <div className="responsive-timeline" style={{ 
+            position: 'relative',
+            background: 'white',
+            borderRadius: '32px',
+            padding: '3rem 2rem',
+            boxShadow: '0 20px 60px rgba(0, 0, 0, 0.08)',
+            overflowX: 'auto',
+            overflowY: 'visible',
+            maxWidth: '100%',
+            flex: '1 1 600px',
+            minWidth: 0
+          }}>
+            <svg 
+              ref={svgRef}
+              width={Math.max(800, totalLanes * 80 + 400)}
+              height={timelineHeight + 40}
+              viewBox={`${Math.min(0, 400 - (totalLanes * 80 / 2) - 150)} -40 ${Math.max(800, totalLanes * 80 + 400)} ${timelineHeight + 80}`}
+              style={{ 
+                overflow: 'visible', 
+                cursor: draggingEdge ? 'ns-resize' : 'default',
+                userSelect: draggingEdge ? 'none' : 'auto',
+                touchAction: draggingEdge ? 'none' : 'auto'
+              }}
+              onMouseMove={handleEdgeDrag}
+              onMouseUp={handleEdgeDragEnd}
+              onMouseLeave={handleEdgeDragEnd}
+              onTouchMove={handleEdgeDrag}
+              onTouchEnd={handleEdgeDragEnd}
+            >
+              <defs>
+                {/* Gradient definitions for each category */}
+                {Object.entries(categories).map(([cat, color]) => (
+                  <linearGradient key={cat} id={`gradient-${cat}`} x1="0%" y1="0%" x2="0%" y2="100%">
+                    <stop offset="0%" style={{ stopColor: color, stopOpacity: 0.9 }} />
+                    <stop offset="100%" style={{ stopColor: color, stopOpacity: 0.7 }} />
+                  </linearGradient>
+                ))}
+                
+                {/* Glow filter */}
+                <filter id="glow">
+                  <feGaussianBlur stdDeviation="4" result="coloredBlur"/>
+                  <feMerge>
+                    <feMergeNode in="coloredBlur"/>
+                    <feMergeNode in="SourceGraphic"/>
+                  </feMerge>
+                </filter>
+              </defs>
+
+              {/* Year labels */}
+              {Array.from({ length: maxYear - minYear + 1 }, (_, i) => minYear + i).map(year => (
+                <g key={year}>
+                  <line
+                    x1={Math.min(50, 400 - (totalLanes * 80 / 2) - 100)}
+                    y1={yearToY(year)}
+                    x2={Math.max(750, 400 + (totalLanes * 80 / 2) + 100)}
+                    y2={yearToY(year)}
+                    stroke="#E5E7EB"
+                    strokeWidth="1"
+                    strokeDasharray="5,5"
+                  />
+                  <text
+                    x={Math.min(30, 400 - (totalLanes * 80 / 2) - 120)}
+                    y={yearToY(year) + 5}
+                    fill="#9CA3AF"
+                    fontSize="14"
+                    fontFamily="'Syne', sans-serif"
+                    fontWeight="600"
+                    textAnchor="end"
+                  >
+                    {year}
+                  </text>
+                </g>
+              ))}
+
+              {/* Ribbons */}
+              {filteredMilestones.map((milestone, index) => {
+                const lane = milestoneLanes[milestone.id];
+                const { path, startY, endY, x1, x2 } = generateRibbonPath(milestone, lane, totalLanes);
+                const isHovered = hoveredId === milestone.id;
+                const isSelected = selectedId === milestone.id;
+                
+                return (
+                  <g 
+                    key={milestone.id}
+                    style={{
+                      cursor: 'pointer',
+                      transition: 'all 0.3s ease',
+                      animation: `flowIn 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) ${index * 0.1}s backwards`
+                    }}
+                    onMouseEnter={() => setHoveredId(milestone.id)}
+                    onMouseLeave={() => setHoveredId(null)}
+                    onClick={() => setSelectedId(milestone.id)}
+                  >
+                    {/* Shadow - only for non-hypothetical milestones */}
+                    {!(milestone.hypothetical || false) && (
+                      <path
+                        d={path}
+                        fill="rgba(0, 0, 0, 0.1)"
+                        transform="translate(3, 3)"
+                      />
+                    )}
+                    
+                    {/* Main ribbon */}
+                    <path
+                      d={path}
+                      fill={(milestone.hypothetical || false) ? 'none' : `url(#gradient-${milestone.category})`}
+                      stroke={(milestone.hypothetical || false) ? categories[milestone.category] : 'none'}
+                      strokeWidth={(milestone.hypothetical || false) ? '3' : '0'}
+                      strokeDasharray={(milestone.hypothetical || false) ? '10,5' : 'none'}
+                      opacity={isHovered || isSelected ? 1 : ((milestone.hypothetical || false) ? 0.7 : 0.85)}
+                      filter={isHovered || isSelected ? "url(#glow)" : "none"}
+                      style={{
+                        transition: 'opacity 0.3s ease'
+                      }}
+                    />
+                    
+                    {/* Label - rotated vertically inside the ribbon */}
+                    {renamingId === milestone.id ? (
+                      // Rename input - shown when right-clicked
+                      <foreignObject
+                        x={(x1 + x2) / 2 - 40}
+                        y={(startY + endY) / 2 - 100}
+                        width="80"
+                        height="200"
+                        transform={`rotate(-90 ${(x1 + x2) / 2} ${(startY + endY) / 2})`}
+                      >
+                        <div style={{ 
+                          width: '100%', 
+                          height: '100%', 
+                          display: 'flex', 
+                          alignItems: 'center', 
+                          justifyContent: 'center' 
+                        }}>
+                          <input
+                            type="text"
+                            value={renameValue}
+                            onChange={(e) => setRenameValue(e.target.value)}
+                            onKeyDown={(e) => {
+                              if (e.key === 'Enter') handleRenameSave();
+                              if (e.key === 'Escape') handleRenameCancel();
+                            }}
+                            onBlur={handleRenameSave}
+                            autoFocus
+                            style={{
+                              width: '180px',
+                              padding: '4px 8px',
+                              fontSize: '13px',
+                              fontFamily: "'Syne', sans-serif",
+                              fontWeight: '700',
+                              border: '2px solid white',
+                              borderRadius: '4px',
+                              background: 'rgba(0,0,0,0.8)',
+                              color: 'white',
+                              textAlign: 'center',
+                              outline: 'none'
+                            }}
+                          />
+                        </div>
+                      </foreignObject>
+                    ) : (
+                      // Normal text - shown normally
+                      <text
+                        x={(x1 + x2) / 2}
+                        y={(startY + endY) / 2}
+                        fill="white"
+                        fontSize="13"
+                        fontFamily="'Syne', sans-serif"
+                        fontWeight="700"
+                        textAnchor="middle"
+                        transform={`rotate(-90 ${(x1 + x2) / 2} ${(startY + endY) / 2})`}
+                        onDoubleClick={(e) => {
+                          e.stopPropagation();
+                          handleRenameStart(milestone.id, milestone.name, e);
+                        }}
+                        style={{ 
+                          transition: 'all 0.3s ease',
+                          pointerEvents: 'all',
+                          cursor: 'text',
+                          textShadow: '0 0 4px rgba(0,0,0,1), 0 0 8px rgba(0,0,0,1), 0 2px 6px rgba(0,0,0,1), 0 4px 8px rgba(0,0,0,0.8)'
+                        }}
+                      >
+                        {milestone.name}
+                      </text>
+                    )}
+
+                    {/* Interactive edge handles for resizing (only for non-ongoing milestones) */}
+                    {!milestone.ongoing && (
+                      <>
+                        {/* Top edge handle (end date) */}
+                        <rect
+                          x={x1}
+                          y={endY - 8}
+                          width={x2 - x1}
+                          height={16}
+                          fill="transparent"
+                          stroke={isHovered ? "rgba(255,255,255,0.5)" : "transparent"}
+                          strokeWidth="2"
+                          strokeDasharray="4,4"
+                          style={{ cursor: 'ns-resize' }}
+                          onMouseDown={(e) => handleEdgeDragStart(milestone.id, 'end', e)}
+                          onTouchStart={(e) => handleEdgeDragStart(milestone.id, 'end', e)}
+                          onMouseEnter={(e) => e.stopPropagation()}
+                        />
+                        
+                        {/* Bottom edge handle (start date) */}
+                        <rect
+                          x={x1}
+                          y={startY - 8}
+                          width={x2 - x1}
+                          height={16}
+                          fill="transparent"
+                          stroke={isHovered ? "rgba(255,255,255,0.5)" : "transparent"}
+                          strokeWidth="2"
+                          strokeDasharray="4,4"
+                          style={{ cursor: 'ns-resize' }}
+                          onMouseDown={(e) => handleEdgeDragStart(milestone.id, 'start', e)}
+                          onTouchStart={(e) => handleEdgeDragStart(milestone.id, 'start', e)}
+                          onMouseEnter={(e) => e.stopPropagation()}
+                        />
+                      </>
+                    )}
+
+                    {/* Sub-event markers */}
+                    {milestone.subEvents && milestone.subEvents.map((subEvent, subIndex) => {
+                      const subEventY = dateToY(subEvent.month, subEvent.year);
+                      const subEventKey = `${milestone.id}-${subEvent.id}`;
+                      const isSubHovered = hoveredSubEvent === subEventKey;
+                      
+                      // Only show if within the milestone range
+                      // With filleted edges, diamonds can appear anywhere in the ribbon
+                      const minY = Math.min(startY, endY);
+                      const maxY = Math.max(startY, endY);
+                      
+                      if (subEventY >= minY && subEventY <= maxY && subEvent.name) {
+                        return (
+                          <g 
+                            key={subEvent.id}
+                            onMouseEnter={() => setHoveredSubEvent(subEventKey)}
+                            onMouseLeave={() => setHoveredSubEvent(null)}
+                            style={{ cursor: 'pointer' }}
+                          >
+                            {/* Diamond marker - positioned well inside ribbon */}
+                            <path
+                              d={`M ${x1 + 20} ${subEventY - (isSubHovered ? 8 : 6)} L ${x1 + 20 + (isSubHovered ? 8 : 6)} ${subEventY} L ${x1 + 20} ${subEventY + (isSubHovered ? 8 : 6)} L ${x1 + 20 - (isSubHovered ? 8 : 6)} ${subEventY} Z`}
+                              fill="white"
+                              stroke={categories[milestone.category]}
+                              strokeWidth={isSubHovered ? "3" : "2"}
+                              opacity={isSubHovered ? 1 : 0.9}
+                              style={{ 
+                                transition: 'all 0.2s ease',
+                                filter: isSubHovered ? 'drop-shadow(0 3px 8px rgba(0,0,0,0.3))' : 'drop-shadow(0 2px 4px rgba(0,0,0,0.2))'
+                              }}
+                            />
+                          </g>
+                        );
+                      }
+                      return null;
+                    })}
+                  </g>
+                );
+              })}
+
+              {/* Sub-event tooltips - rendered last so they appear on top */}
+              {hoveredSubEvent && filteredMilestones.map(milestone => {
+                const lane = milestoneLanes[milestone.id];
+                const { path, startY, endY, x1, x2 } = generateRibbonPath(milestone, lane, totalLanes);
+                
+                return milestone.subEvents?.map(subEvent => {
+                  const subEventKey = `${milestone.id}-${subEvent.id}`;
+                  if (hoveredSubEvent !== subEventKey) return null;
+                  
+                  const subEventY = dateToY(subEvent.month, subEvent.year);
+                  
+                  return (
+                    <g key={subEventKey}>
+                      <rect
+                        x={x2 + 10}
+                        y={subEventY - 16}
+                        rx="6"
+                        ry="6"
+                        width={subEvent.name.length * 7.5 + 16}
+                        height="28"
+                        fill="rgba(0, 0, 0, 0.9)"
+                        stroke="white"
+                        strokeWidth="2"
+                        style={{ 
+                          filter: 'drop-shadow(0 4px 12px rgba(0,0,0,0.3))',
+                          pointerEvents: 'none'
+                        }}
+                      />
+                      <text
+                        x={x2 + 18}
+                        y={subEventY}
+                        fill="white"
+                        fontSize="11"
+                        fontFamily="'Syne', sans-serif"
+                        fontWeight="700"
+                        style={{ pointerEvents: 'none' }}
+                      >
+                        {subEvent.name}
+                      </text>
+                    </g>
+                  );
+                });
+              })}
+
+              {/* Drag date tooltip - shown while dragging ribbon edge */}
+              {draggingEdge && dragPosition && (
+                <g>
+                  <rect
+                    x="50"
+                    y={dragPosition.y - 20}
+                    rx="8"
+                    ry="8"
+                    width="140"
+                    height="36"
+                    fill="rgba(139, 92, 246, 0.95)"
+                    stroke="white"
+                    strokeWidth="3"
+                    style={{ 
+                      filter: 'drop-shadow(0 6px 20px rgba(0,0,0,0.4))'
+                    }}
+                  />
+                  <text
+                    x="120"
+                    y={dragPosition.y + 4}
+                    fill="white"
+                    fontSize="14"
+                    fontFamily="'Syne', sans-serif"
+                    fontWeight="700"
+                    textAnchor="middle"
+                    style={{ pointerEvents: 'none' }}
+                  >
+                    {new Date(dragPosition.year, dragPosition.month - 1).toLocaleDateString('default', { month: 'short', year: 'numeric' })}
+                  </text>
+                </g>
+              )}
+
+            </svg>
+          </div>
+
+          {/* Legend & Info Panel */}
+          <div className="responsive-sidebar" style={{ 
+            minWidth: '300px', 
+            maxWidth: '400px',
+            flex: '1 1 300px',
+            width: '100%'
+          }}>
+            {/* Category Legend */}
+            <div className="category-box" style={{
+              background: 'white',
+              borderRadius: '24px',
+              padding: '2rem',
+              boxShadow: '0 10px 30px rgba(0, 0, 0, 0.08)',
+              marginBottom: '1.5rem'
+            }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
+                <h3 style={{ 
+                  fontSize: '1.25rem', 
+                  color: '#1F2937',
+                  fontWeight: 700,
+                  margin: 0
+                }}>
+                  Categories
+                </h3>
+                <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
+                  <button
+                    onClick={toggleAllCategories}
+                    style={{
+                      background: '#F3F4F6',
+                      border: 'none',
+                      borderRadius: '8px',
+                      padding: '0.5rem 0.75rem',
+                      fontSize: '0.75rem',
+                      fontWeight: 600,
+                      cursor: 'pointer',
+                      transition: 'all 0.2s',
+                      color: '#6B7280'
+                    }}
+                    onMouseEnter={(e) => {
+                      e.target.style.background = '#E5E7EB';
+                      e.target.style.color = '#374151';
+                    }}
+                    onMouseLeave={(e) => {
+                      e.target.style.background = '#F3F4F6';
+                      e.target.style.color = '#6B7280';
+                    }}
+                    title={visibleCategories.length === Object.keys(categories).length ? 'Hide All' : 'Show All'}
+                  >
+                    {visibleCategories.length === Object.keys(categories).length ? 'Hide All' : 'Show All'}
+                  </button>
+                  <button
+                    onClick={() => setShowCategoryManager(true)}
+                    style={{
+                      background: '#F3F4F6',
+                      border: 'none',
+                      borderRadius: '8px',
+                      width: '32px',
+                      height: '32px',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      cursor: 'pointer',
+                      transition: 'all 0.2s',
+                      color: '#6B7280'
+                    }}
+                    onMouseEnter={(e) => {
+                      e.target.style.background = '#E5E7EB';
+                      e.target.style.color = '#374151';
+                    }}
+                    onMouseLeave={(e) => {
+                      e.target.style.background = '#F3F4F6';
+                      e.target.style.color = '#6B7280';
+                    }}
+                    title="Manage Categories"
+                  >
+                    <Edit2 size={16} />
+                  </button>
+                </div>
+              </div>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+                {Object.entries(categories).map(([cat, color]) => {
+                  const count = milestones.filter(m => m.category === cat).length;
+                  const isVisible = visibleCategories.includes(cat);
+                  return (
+                    <div 
+                      key={cat}
+                      onClick={() => toggleCategoryFilter(cat)}
+                      style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '0.75rem',
+                        padding: '0.5rem',
+                        borderRadius: '12px',
+                        transition: 'all 0.2s',
+                        cursor: 'pointer',
+                        opacity: isVisible ? 1 : 0.5
+                      }}
+                      onMouseEnter={(e) => e.currentTarget.style.background = '#F9FAFB'}
+                      onMouseLeave={(e) => e.currentTarget.style.background = 'transparent'}
+                    >
+                      <div style={{
+                        width: '32px',
+                        height: '32px',
+                        borderRadius: '8px',
+                        background: isVisible ? color : '#D1D5DB',
+                        boxShadow: isVisible ? `0 4px 12px ${color}40` : 'none',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        transition: 'all 0.2s',
+                        border: isVisible ? 'none' : '2px solid #9CA3AF'
+                      }}>
+                        {isVisible && (
+                          <Check size={18} color="white" strokeWidth={3} />
+                        )}
+                      </div>
+                      <span style={{ 
+                        flex: 1,
+                        color: '#4B5563',
+                        fontWeight: 500
+                      }}>
+                        {cat}
+                      </span>
+                      <span style={{
+                        color: '#9CA3AF',
+                        fontSize: '0.875rem',
+                        fontWeight: 600
+                      }}>
+                        {count}
+                      </span>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+
+
+            {/* Selected Milestone Details */}
+            {selectedMilestone && (
+              <div className="ribbon-details" style={{
+                background: 'white',
+                borderRadius: '24px',
+                padding: '2rem',
+                boxShadow: '0 10px 30px rgba(0, 0, 0, 0.08)',
+                position: 'sticky',
+                top: '20px',
+                animation: 'slideUp 0.4s cubic-bezier(0.34, 1.56, 0.64, 1)',
+                border: `3px solid ${categories[selectedMilestone.category]}20`
+              }}>
+                <button
+                  onClick={() => setSelectedId(null)}
+                  style={{
+                    position: 'absolute',
+                    top: '1rem',
+                    right: '1rem',
+                    background: '#F3F4F6',
+                    border: 'none',
+                    borderRadius: '8px',
+                    width: '32px',
+                    height: '32px',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    cursor: 'pointer',
+                    transition: 'all 0.2s'
+                  }}
+                  onMouseEnter={(e) => e.target.style.background = '#E5E7EB'}
+                  onMouseLeave={(e) => e.target.style.background = '#F3F4F6'}
+                >
+                  <X size={18} />
+                </button>
+
+                <div style={{
+                  width: '48px',
+                  height: '48px',
+                  borderRadius: '12px',
+                  background: categories[selectedMilestone.category],
+                  marginBottom: '1rem',
+                  boxShadow: `0 8px 24px ${categories[selectedMilestone.category]}40`
+                }} />
+                
+                <h3 style={{ 
+                  fontSize: '1.5rem',
+                  color: '#1F2937',
+                  marginBottom: '0.5rem',
+                  fontWeight: 700
+                }}>
+                  {selectedMilestone.name}
+                </h3>
+                
+                <p style={{
+                  color: categories[selectedMilestone.category],
+                  fontWeight: 600,
+                  marginBottom: '1.5rem'
+                }}>
+                  {selectedMilestone.category}
+                </p>
+
+                <div style={{
+                  background: '#F9FAFB',
+                  borderRadius: '12px',
+                  padding: '1rem',
+                  marginBottom: '1rem'
+                }}>
+                  <div style={{ 
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '0.5rem',
+                    color: '#6B7280',
+                    fontSize: '0.875rem',
+                    marginBottom: '0.5rem'
+                  }}>
+                    <Calendar size={16} />
+                    <span>Timeline</span>
+                  </div>
+                  <p style={{ color: '#1F2937', fontWeight: 600 }}>
+                    {new Date(selectedMilestone.startYear, selectedMilestone.startMonth - 1).toLocaleString('default', { month: 'short', year: 'numeric' })}
+                    {' → '}
+                    {selectedMilestone.ongoing ? (
+                      <span style={{ 
+                        color: categories[selectedMilestone.category],
+                        fontStyle: 'italic'
+                      }}>
+                        Ongoing
+                      </span>
+                    ) : (
+                      new Date(selectedMilestone.endYear, selectedMilestone.endMonth - 1).toLocaleString('default', { month: 'short', year: 'numeric' })
+                    )}
+                  </p>
+                </div>
+
+                {/* Sub-events list */}
+                {selectedMilestone.subEvents && selectedMilestone.subEvents.length > 0 && (
+                  <div style={{
+                    background: '#F9FAFB',
+                    borderRadius: '12px',
+                    padding: '1rem',
+                    marginBottom: '1rem'
+                  }}>
+                    <div style={{ 
+                      color: '#6B7280',
+                      fontSize: '0.875rem',
+                      marginBottom: '0.75rem',
+                      fontWeight: 600
+                    }}>
+                      Sub-Events ({selectedMilestone.subEvents.length})
+                    </div>
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+                      {selectedMilestone.subEvents
+                        .filter(se => se.name)
+                        .sort((a, b) => {
+                          const dateA = a.year * 12 + a.month;
+                          const dateB = b.year * 12 + b.month;
+                          return dateA - dateB;
+                        })
+                        .map(subEvent => (
+                          <div 
+                            key={subEvent.id}
+                            style={{
+                              display: 'flex',
+                              alignItems: 'center',
+                              gap: '0.5rem',
+                              padding: '0.5rem',
+                              background: 'white',
+                              borderRadius: '6px',
+                              fontSize: '0.813rem'
+                            }}
+                          >
+                            <div style={{
+                              width: '8px',
+                              height: '8px',
+                              transform: 'rotate(45deg)',
+                              background: categories[selectedMilestone.category],
+                              flexShrink: 0
+                            }} />
+                            <span style={{ color: '#1F2937', fontWeight: 600, flex: 1 }}>
+                              {subEvent.name}
+                            </span>
+                            <span style={{ color: '#9CA3AF', fontSize: '0.75rem' }}>
+                              {new Date(subEvent.year, subEvent.month - 1).toLocaleString('default', { month: 'short', year: 'numeric' })}
+                            </span>
+                          </div>
+                        ))}
+                    </div>
+                  </div>
+                )}
+
+                <div style={{ display: 'flex', gap: '0.75rem' }}>
+                  <button
+                    onClick={() => handleEdit(selectedMilestone)}
+                    style={{
+                      flex: 1,
+                      padding: '0.75rem',
+                      background: '#F3F4F6',
+                      color: '#4B5563',
+                      border: 'none',
+                      borderRadius: '12px',
+                      fontSize: '0.875rem',
+                      fontWeight: 600,
+                      cursor: 'pointer',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      gap: '0.5rem',
+                      transition: 'all 0.2s'
+                    }}
+                    onMouseEnter={(e) => {
+                      e.target.style.background = '#E5E7EB';
+                      e.target.style.transform = 'translateY(-2px)';
+                    }}
+                    onMouseLeave={(e) => {
+                      e.target.style.background = '#F3F4F6';
+                      e.target.style.transform = 'translateY(0)';
+                    }}
+                  >
+                    <Edit2 size={16} />
+                    Edit
+                  </button>
+                  <button
+                    onClick={() => handleDelete(selectedMilestone.id)}
+                    style={{
+                      flex: 1,
+                      padding: '0.75rem',
+                      background: '#FEE2E2',
+                      color: '#DC2626',
+                      border: 'none',
+                      borderRadius: '12px',
+                      fontSize: '0.875rem',
+                      fontWeight: 600,
+                      cursor: 'pointer',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      gap: '0.5rem',
+                      transition: 'all 0.2s'
+                    }}
+                    onMouseEnter={(e) => {
+                      e.target.style.background = '#FECACA';
+                      e.target.style.transform = 'translateY(-2px)';
+                    }}
+                    onMouseLeave={(e) => {
+                      e.target.style.background = '#FEE2E2';
+                      e.target.style.transform = 'translateY(0)';
+                    }}
+                  >
+                    <Trash2 size={16} />
+                    Delete
+                  </button>
+                </div>
+              </div>
+            )}
+
+            {/* Empty state */}
+            {!selectedMilestone && (
+              <div style={{
+                background: 'white',
+                borderRadius: '24px',
+                padding: '3rem 2rem',
+                boxShadow: '0 10px 30px rgba(0, 0, 0, 0.08)',
+                textAlign: 'center'
+              }}>
+                <div style={{
+                  width: '64px',
+                  height: '64px',
+                  margin: '0 auto 1rem',
+                  borderRadius: '50%',
+                  background: 'linear-gradient(135deg, #8B5CF620, #EC489920)',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center'
+                }}>
+                  <Calendar size={32} style={{ color: '#8B5CF6' }} />
+                </div>
+                <p style={{ 
+                  color: '#6B7280',
+                  fontFamily: "'Lora', serif",
+                  fontStyle: 'italic',
+                  lineHeight: 1.6
+                }}>
+                  Click on a ribbon to see milestone details
+                </p>
+              </div>
+            )}
+          </div>
+        </div>
+      </main>
+
+      {/* CSS Animations */}
+      <style>{`
+        @import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Lora:ital,wght@0,400;0,600;1,400&display=swap');
+        
+        @keyframes fadeIn {
+          from { opacity: 0; }
+          to { opacity: 1; }
+        }
+        
+        @keyframes slideUp {
+          from {
+            opacity: 0;
+            transform: translateY(30px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+        
+        @keyframes slideDown {
+          from {
+            opacity: 0;
+            transform: translateY(-10px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+        
+        @keyframes flowIn {
+          from {
+            opacity: 0;
+            transform: translateY(-20px) scale(0.9);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+          }
+        }
+        
+        * {
+          box-sizing: border-box;
+        }
+        
+        input:focus, select:focus {
+          outline: none;
+        }
+
+        /* Custom scrollbar for form */
+        form::-webkit-scrollbar {
+          width: 8px;
+        }
+        
+        form::-webkit-scrollbar-track {
+          background: #F3F4F6;
+          border-radius: 10px;
+        }
+        
+        form::-webkit-scrollbar-thumb {
+          background: linear-gradient(135deg, #8B5CF6, #EC4899);
+          border-radius: 10px;
+        }
+        
+        form::-webkit-scrollbar-thumb:hover {
+          background: linear-gradient(135deg, #7C3AED, #DB2777);
+        }
+        
+        /* Responsive Design - Mobile */
+        @media (max-width: 768px) {
+          body {
+            font-size: 14px;
+          }
+          
+          /* Stack layout vertically on mobile */
+          .responsive-container {
+            flex-direction: column !important;
+            gap: 1.5rem !important;
+            padding: 0 0.5rem !important;
+          }
+          
+          /* Full width sidebar on mobile - always on top */
+          .responsive-sidebar {
+            min-width: 100% !important;
+            max-width: 100% !important;
+            order: -1;
+          }
+          
+          /* Disable sticky on mobile - it can be annoying */
+          .responsive-sidebar > div[style*="position: sticky"] {
+            position: relative !important;
+            top: auto !important;
+          }
+          
+          /* Timeline adjustments */
+          .responsive-timeline {
+            padding: 1.5rem 1rem !important;
+            overflow-x: scroll !important;
+            border-radius: 20px !important;
+          }
+          
+          /* Category boxes - more compact */
+          .category-box {
+            padding: 1.5rem !important;
+            border-radius: 20px !important;
+            margin-bottom: 1rem !important;
+          }
+          
+          /* Larger touch targets for buttons */
+          button {
+            min-height: 44px !important;
+            padding: 0.75rem 1.25rem !important;
+            font-size: 0.9rem !important;
+          }
+          
+          /* Header adjustments */
+          h1 {
+            font-size: 2rem !important;
+          }
+          
+          h2 {
+            font-size: 1.5rem !important;
+          }
+          
+          h3 {
+            font-size: 1.1rem !important;
+          }
+          
+          /* Make modals full screen on mobile */
+          .modal-overlay > div {
+            width: 95% !important;
+            max-width: 95% !important;
+            max-height: 90vh !important;
+            overflow-y: auto !important;
+          }
+          
+          /* Improve form spacing on mobile */
+          form input, form select, form textarea {
+            font-size: 16px !important; /* Prevents zoom on iOS */
+          }
+        }
+        
+        /* Responsive Design - Tablet */
+        @media (min-width: 769px) and (max-width: 1024px) {
+          .responsive-sidebar {
+            min-width: 280px !important;
+            max-width: 320px !important;
+          }
+          
+          .responsive-timeline {
+            flex: 1 1 500px !important;
+          }
+          
+          /* Keep sticky on tablet */
+          .responsive-sidebar > div[style*="position: sticky"] {
+            position: sticky !important;
+          }
+        }
+        
+        /* Desktop - ensure sticky works */
+        @media (min-width: 1025px) {
+          .responsive-sidebar > div[style*="position: sticky"] {
+            position: sticky !important;
+          }
+        }
+      `}</style>
+    </div>
+  );
+}
+
+    // Render the app
+    const { useState, useEffect, useRef } = React;
+    const { Plus, Edit2, Trash2, X, Check, Calendar, Download, Upload, Image, FileJson, HelpCircle } = window.lucideReact;
+    
+    const root = ReactDOM.createRoot(document.getElementById('root'));
+    root.render(React.createElement(LifeRibbons));
+  </script>
+</body>
+</html>
