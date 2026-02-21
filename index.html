@@ -146,11 +146,11 @@ function LifeNoodles() {
     }
   }, []); // Only run once on mount
 
-  // On mobile, auto-scroll the timeline container to centre on the noodles
+  // On desktop, auto-scroll the timeline container to centre on the noodles
   useEffect(() => {
+    if (window.innerWidth <= 768) return; // mobile uses width:100% SVG, no horizontal scroll needed
     const container = timelineRef.current;
     if (!container) return;
-    // Centre the scrollable content so the ribbons (centred in the SVG) are visible
     container.scrollLeft = (container.scrollWidth - container.clientWidth) / 2;
   }, [totalLanes]);
 
@@ -1628,6 +1628,14 @@ function LifeNoodles() {
           .header-buttons {
             display: none !important;
           }
+          header {
+            display: none !important;
+          }
+          .responsive-timeline {
+            overflow-x: hidden !important;
+            padding: 1rem 0.5rem !important;
+            border-radius: 16px !important;
+          }
           .mobile-fab-container {
             display: flex !important;
           }
@@ -3030,16 +3038,25 @@ function LifeNoodles() {
             flex: '1 1 600px',
             minWidth: 0
           }}>
-            <svg 
+            {(() => {
+              const isMobile = window.innerWidth <= 768;
+              const mobileVBx = 400 - (totalLanes * 80 / 2) - 70;
+              const mobileVBw = Math.max(200, totalLanes * 80 + 90);
+              return (
+            <svg
               ref={svgRef}
-              width={Math.max(800, totalLanes * 80 + 400)}
-              height={timelineHeight + 40}
-              viewBox={`${Math.min(0, 400 - (totalLanes * 80 / 2) - 150)} -40 ${Math.max(800, totalLanes * 80 + 400)} ${timelineHeight + 80}`}
-              style={{ 
-                overflow: 'visible', 
+              width={isMobile ? '100%' : Math.max(800, totalLanes * 80 + 400)}
+              height={isMobile ? undefined : timelineHeight + 40}
+              viewBox={isMobile
+                ? `${mobileVBx} -40 ${mobileVBw} ${timelineHeight + 80}`
+                : `${Math.min(0, 400 - (totalLanes * 80 / 2) - 150)} -40 ${Math.max(800, totalLanes * 80 + 400)} ${timelineHeight + 80}`}
+              preserveAspectRatio={isMobile ? 'xMidYMin meet' : undefined}
+              style={{
+                overflow: isMobile ? 'hidden' : 'visible',
                 cursor: draggingEdge ? 'ns-resize' : 'default',
                 userSelect: draggingEdge ? 'none' : 'auto',
-                touchAction: draggingEdge ? 'none' : 'auto'
+                touchAction: draggingEdge ? 'none' : 'auto',
+                display: 'block'
               }}
               onMouseMove={handleEdgeDrag}
               onMouseUp={handleEdgeDragEnd}
@@ -3358,6 +3375,8 @@ function LifeNoodles() {
               )}
 
             </svg>
+            );
+          })()}
           </div>
 
           {/* Legend & Info Panel */}
