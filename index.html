@@ -51,12 +51,13 @@ const DEFAULT_CATEGORIES = {
   Relationship: '#EC4899'    // Pink
 };
 
-// Initial demo data
+// Initial demo data (dates are relative to current year)
+const _cy = new Date().getFullYear();
 const INITIAL_MILESTONES = [
-  { id: 1, name: 'MBA', category: 'Education', startMonth: 9, startYear: 2022, endMonth: 5, endYear: 2026, ongoing: false, hypothetical: false, subEvents: [] },
-  { id: 2, name: 'Flight Training', category: 'Hobby', startMonth: 3, startYear: 2019, endMonth: 8, endYear: 2023, ongoing: false, hypothetical: false, subEvents: [] },
-  { id: 3, name: 'First Job', category: 'Career', startMonth: 6, startYear: 2015, endMonth: 12, endYear: 2019, ongoing: false, hypothetical: false, subEvents: [] },
-  { id: 4, name: 'Marathon Training', category: 'Health', startMonth: 1, startYear: 2020, endMonth: 10, endYear: 2020, ongoing: false, hypothetical: false, subEvents: [] }
+  { id: 1, name: 'Graduate Degree', category: 'Education', startMonth: 9, startYear: _cy - 4, endMonth: 5, endYear: _cy, ongoing: false, hypothetical: false, subEvents: [] },
+  { id: 2, name: 'New Hobby', category: 'Hobby', startMonth: 3, startYear: _cy - 7, endMonth: 8, endYear: _cy - 3, ongoing: false, hypothetical: false, subEvents: [] },
+  { id: 3, name: 'Career Start', category: 'Career', startMonth: 6, startYear: _cy - 11, endMonth: 12, endYear: _cy - 7, ongoing: false, hypothetical: false, subEvents: [] },
+  { id: 4, name: 'Fitness Challenge', category: 'Health', startMonth: 1, startYear: _cy - 6, endMonth: 10, endYear: _cy - 5, ongoing: false, hypothetical: false, subEvents: [] }
 ];
 
 function LifeRibbons() {
@@ -74,7 +75,7 @@ function LifeRibbons() {
   const [renamingId, setRenamingId] = useState(null); // ID of milestone being renamed
   const [renameValue, setRenameValue] = useState(''); // New name value
   const [selectedId, setSelectedId] = useState(null);
-  const [birthYear, setBirthYear] = useState(1995);
+  const [birthYear, setBirthYear] = useState(_cy - 30);
   const [showExportMenu, setShowExportMenu] = useState(false);
   const [showDataExportMenu, setShowDataExportMenu] = useState(false);
   const [hoveredSubEvent, setHoveredSubEvent] = useState(null);
