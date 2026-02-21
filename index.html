@@ -3384,13 +3384,9 @@ function LifeNoodles() {
             minWidth: '300px',
             maxWidth: '400px',
             flex: '1 1 300px',
-            width: '100%',
-            position: 'sticky',
-            top: '1rem',
-            alignSelf: 'flex-start',
-            maxHeight: 'calc(100vh - 2rem)',
-            overflowY: 'auto'
+            width: '100%'
           }}>
+            <div style={{ position: 'sticky', top: '1rem' }}>
             {/* Category Legend */}
             <div className="category-box" style={{
               background: 'white',
@@ -3767,6 +3763,7 @@ function LifeNoodles() {
                 </p>
               </div>
             )}
+            </div>{/* end sticky inner wrapper */}
           </div>
         </div>
       </main>
