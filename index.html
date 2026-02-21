@@ -101,6 +101,7 @@ function LifeNoodles() {
   const [showMobileDetails, setShowMobileDetails] = useState(false);
   const svgRef = useRef(null);
   const fileInputRef = useRef(null);
+  const timelineRef = useRef(null);
 
   
   const [formData, setFormData] = useState({
@@ -143,6 +144,14 @@ function LifeNoodles() {
       })));
     }
   }, []); // Only run once on mount
+
+  // On mobile, auto-scroll the timeline container to centre on the noodles
+  useEffect(() => {
+    const container = timelineRef.current;
+    if (!container) return;
+    // Centre the scrollable content so the ribbons (centred in the SVG) are visible
+    container.scrollLeft = (container.scrollWidth - container.clientWidth) / 2;
+  }, [totalLanes]);
 
   // Sync visible categories when categories change
   useEffect(() => {
@@ -3005,7 +3014,7 @@ function LifeNoodles() {
           padding: '0 1rem'
         }}>
           {/* SVG Timeline */}
-          <div className="responsive-timeline" style={{ 
+          <div ref={timelineRef} className="responsive-timeline" style={{
             position: 'relative',
             background: 'white',
             borderRadius: '32px',
