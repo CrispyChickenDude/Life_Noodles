@@ -15,12 +15,18 @@
 <body>
   <div id="root"></div>
   
-  <!-- Load React, ReactDOM, and Babel from CDN -->
-  <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
-  <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
-  
+  <!-- Load React, ReactDOM, and Babel from CDN (pinned versions with SRI) -->
+  <script crossorigin="anonymous"
+    src="https://unpkg.com/react@18.3.1/umd/react.production.min.js"
+    integrity="sha384-DGyLxAyjq0f9SPpVevD6IgztCFlnMF6oW/XQGmfe+IsZ8TqEiDrcHkMLKI6fiB/Z"></script>
+  <script crossorigin="anonymous"
+    src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.production.min.js"
+    integrity="sha384-gTGxhz21lVGYNMcdJOyq01Edg0jhn/c22nsx0kyqP0TxaV5WVdsSH1fSDUf5YJj1"></script>
+
   <!-- Load Babel Standalone for JSX transformation -->
-  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <script crossorigin="anonymous"
+    src="https://unpkg.com/@babel/standalone@7.26.4/babel.min.js"
+    integrity="sha384-x/ilTFv/u/eu6YSmkFDZl5V5Mm/pkxxcVv2cVJOrr1J0rvILhMvRBCy6yA75wYBj"></script>
   
   <!-- Inline Lucide Icons -->
   <script>
@@ -50,6 +56,12 @@ const DEFAULT_CATEGORIES = {
   Travel: '#06B6D4',         // Cyan
   Relationship: '#EC4899'    // Pink
 };
+
+// Security helpers
+const isValidHex = (str) => typeof str === 'string' && /^#[0-9A-Fa-f]{6}$/.test(str);
+const sanitizeStr = (val, maxLen) => typeof val === 'string' ? val.trim().slice(0, maxLen) : '';
+const svgId = (str) => String(str).replace(/[^a-zA-Z0-9-_]/g, '_');
+const MAX_IMPORT_FILE_SIZE = 1024 * 1024; // 1 MB
 
 // Initial demo data (dates are relative to current year)
 const _cy = new Date().getFullYear();
@@ -604,6 +616,12 @@ function LifeNoodles() {
   const importData = (event) => {
     const file = event.target.files?.[0];
     if (!file) return;
+
+    if (file.size > MAX_IMPORT_FILE_SIZE) {
+      alert('File is too large. Maximum import size is 1 MB.');
+      event.target.value = '';
+      return;
+    }
     
     const reader = new FileReader();
     reader.onload = (e) => {
@@ -694,8 +712,8 @@ function LifeNoodles() {
             
             importedMilestones.push({
               id: Date.now() + Math.random(),
-              name: name,
-              category: category || 'Personal',
+              name: sanitizeStr(name, 100),
+              category: sanitizeStr(category, 50) || 'Personal',
               startMonth: finalStartMonth,
               startYear: finalStartYear,
               endMonth: finalEndMonth,
@@ -715,8 +733,9 @@ function LifeNoodles() {
               const matches = line.match(/(".*?"|[^",\s]+)(?=\s*,|\s*$)/g);
               if (matches && matches.length >= 2) {
                 const [catName, catColor] = matches.map(m => m.replace(/^"|"$/g, ''));
-                if (catName && catColor) {
-                  newCategories[catName] = catColor;
+                const safeKey = sanitizeStr(catName, 50);
+                if (safeKey && isValidHex(catColor)) {
+                  newCategories[safeKey] = catColor;
                 }
               }
             });
@@ -818,61 +837,89 @@ function LifeNoodles() {
           
           alert(`CSV data imported successfully! ${importedMilestones.length} milestone(s) imported.`);
         } else {
-          // Parse JSON
-          const data = JSON.parse(content);
-          
-          if (!data.milestones || !Array.isArray(data.milestones)) {
+          // Parse JSON with strict schema validation
+          const raw = JSON.parse(content);
+
+          if (!raw || typeof raw !== 'object' || Array.isArray(raw)) {
             throw new Error('Invalid data format');
           }
-          
-          // Ensure all milestones have required fields with defaults
-          const milestonesWithDefaults = data.milestones.map(m => {
-            // Auto-swap dates if needed for non-ongoing milestones
-            let finalStartMonth = m.startMonth;
-            let finalStartYear = m.startYear;
-            let finalEndMonth = m.endMonth;
-            let finalEndYear = m.endYear;
-            
-            if (!m.ongoing) {
-              const needsSwap = (finalStartYear > finalEndYear) || 
-                               (finalStartYear === finalEndYear && finalStartMonth > finalEndMonth);
-              
+          if (!Array.isArray(raw.milestones)) {
+            throw new Error('Invalid data format: milestones must be an array');
+          }
+          if (raw.milestones.length > 500) {
+            throw new Error('Too many milestones (max 500)');
+          }
+
+          const now = new Date().getFullYear();
+          const validMonth = (v) => Number.isInteger(v) && v >= 1 && v <= 12;
+          const validYear  = (v) => Number.isInteger(v) && v >= 1900 && v <= 2200;
+
+          const milestonesWithDefaults = raw.milestones.map((m, i) => {
+            if (!m || typeof m !== 'object' || Array.isArray(m)) {
+              throw new Error(`Invalid milestone at index ${i}`);
+            }
+
+            const ongoing     = m.ongoing === true;
+            const hypothetical = m.hypothetical === true;
+            let finalStartMonth = validMonth(m.startMonth) ? m.startMonth : 1;
+            let finalStartYear  = validYear(m.startYear)   ? m.startYear  : now;
+            let finalEndMonth   = validMonth(m.endMonth)   ? m.endMonth   : 12;
+            let finalEndYear    = validYear(m.endYear)     ? m.endYear    : now;
+
+            if (!ongoing) {
+              const needsSwap = finalStartYear > finalEndYear ||
+                (finalStartYear === finalEndYear && finalStartMonth > finalEndMonth);
               if (needsSwap) {
-                // Swap the dates automatically
-                const tempMonth = finalStartMonth;
-                const tempYear = finalStartYear;
-                finalStartMonth = finalEndMonth;
-                finalStartYear = finalEndYear;
-                finalEndMonth = tempMonth;
-                finalEndYear = tempYear;
+                [finalStartMonth, finalStartYear, finalEndMonth, finalEndYear] =
+                  [finalEndMonth, finalEndYear, finalStartMonth, finalStartYear];
               }
             }
-            
+
+            const subEvents = Array.isArray(m.subEvents)
+              ? m.subEvents.slice(0, 50).map((se, j) => {
+                  if (!se || typeof se !== 'object') return null;
+                  return {
+                    id: Date.now() + i * 100 + j,
+                    name:  sanitizeStr(se.name, 100),
+                    month: validMonth(se.month) ? se.month : 1,
+                    year:  validYear(se.year)   ? se.year  : now
+                  };
+                }).filter(Boolean)
+              : [];
+
             return {
-              ...m,
+              id: Date.now() + Math.random(),
+              name:       sanitizeStr(m.name, 100),
+              category:   sanitizeStr(m.category, 50) || 'Personal',
               startMonth: finalStartMonth,
-              startYear: finalStartYear,
-              endMonth: finalEndMonth,
-              endYear: finalEndYear,
-              hypothetical: m.hypothetical || false,
-              subEvents: m.subEvents || []
+              startYear:  finalStartYear,
+              endMonth:   finalEndMonth,
+              endYear:    finalEndYear,
+              ongoing, hypothetical, subEvents
             };
           });
-          
+
           setMilestones(milestonesWithDefaults);
-          
-          if (data.birthYear && typeof data.birthYear === 'number') {
-            setBirthYear(data.birthYear);
+
+          if (typeof raw.birthYear === 'number' && raw.birthYear >= 1900 && raw.birthYear <= 2100) {
+            setBirthYear(raw.birthYear);
           }
-          
-          // Import categories if they exist
-          if (data.categories && typeof data.categories === 'object') {
-            setCategories(data.categories);
-            // Make all categories visible by default
-            setVisibleCategories(Object.keys(data.categories));
+
+          // Import categories with hex color validation
+          if (raw.categories && typeof raw.categories === 'object' && !Array.isArray(raw.categories)) {
+            const safeCategories = {};
+            for (const [key, value] of Object.entries(raw.categories)) {
+              const safeKey = sanitizeStr(key, 50);
+              if (safeKey && isValidHex(value)) {
+                safeCategories[safeKey] = value;
+              }
+            }
+            if (Object.keys(safeCategories).length > 0) {
+              setCategories(safeCategories);
+              setVisibleCategories(Object.keys(safeCategories));
+            }
           }
-          
-          
+
           alert(`JSON data imported successfully! ${milestonesWithDefaults.length} milestone(s) imported.`);
         }
       } catch (error) {
@@ -921,7 +968,7 @@ function LifeNoodles() {
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;
-      a.download = `getExportFilename('svg')`;
+      a.download = getExportFilename('svg');
       document.body.appendChild(a);
       a.click();
       document.body.removeChild(a);
@@ -2157,6 +2204,7 @@ function LifeNoodles() {
                   value={formData.name}
                   onChange={(e) => setFormData({...formData, name: e.target.value})}
                   placeholder="e.g., Started college, Got married..."
+                  maxLength={100}
                   style={{
                     width: '100%',
                     padding: '0.875rem',
@@ -2398,6 +2446,7 @@ function LifeNoodles() {
                             value={subEvent.name}
                             onChange={(e) => updateSubEvent(subEvent.id, 'name', e.target.value)}
                             placeholder="e.g., Finance 101"
+                            maxLength={100}
                             style={{
                               width: '100%',
                               padding: '0.5rem',
@@ -2637,6 +2686,7 @@ function LifeNoodles() {
                     value={newCategoryName}
                     onChange={(e) => setNewCategoryName(e.target.value)}
                     placeholder="e.g., Fitness, Projects..."
+                    maxLength={50}
                     style={{
                       width: '100%',
                       padding: '0.875rem',
@@ -2789,6 +2839,7 @@ function LifeNoodles() {
                             type="text"
                             value={editCategoryName}
                             onChange={(e) => setEditCategoryName(e.target.value)}
+                            maxLength={50}
                             style={{
                               flex: 1,
                               padding: '0.5rem',
@@ -2986,7 +3037,7 @@ function LifeNoodles() {
               <defs>
                 {/* Gradient definitions for each category */}
                 {Object.entries(categories).map(([cat, color]) => (
-                  <linearGradient key={cat} id={`gradient-${cat}`} x1="0%" y1="0%" x2="0%" y2="100%">
+                  <linearGradient key={cat} id={`gradient-${svgId(cat)}`} x1="0%" y1="0%" x2="0%" y2="100%">
                     <stop offset="0%" style={{ stopColor: color, stopOpacity: 0.9 }} />
                     <stop offset="100%" style={{ stopColor: color, stopOpacity: 0.7 }} />
                   </linearGradient>
@@ -3059,7 +3110,7 @@ function LifeNoodles() {
                     {/* Main ribbon */}
                     <path
                       d={path}
-                      fill={(milestone.hypothetical || false) ? 'none' : `url(#gradient-${milestone.category})`}
+                      fill={(milestone.hypothetical || false) ? 'none' : `url(#gradient-${svgId(milestone.category)})`}
                       stroke={(milestone.hypothetical || false) ? categories[milestone.category] : 'none'}
                       strokeWidth={(milestone.hypothetical || false) ? '3' : '0'}
                       strokeDasharray={(milestone.hypothetical || false) ? '10,5' : 'none'}
@@ -3091,6 +3142,7 @@ function LifeNoodles() {
                             type="text"
                             value={renameValue}
                             onChange={(e) => setRenameValue(e.target.value)}
+                            maxLength={100}
                             onKeyDown={(e) => {
                               if (e.key === 'Enter') handleRenameSave();
                               if (e.key === 'Escape') handleRenameCancel();
