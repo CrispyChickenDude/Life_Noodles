@@ -4130,6 +4130,11 @@ function LifeNoodles() {
           from { transform: translateY(100%); }
           to { transform: translateY(0); }
         }
+
+        @keyframes slideDownToast {
+          from { opacity: 0; transform: translateY(-12px); }
+          to { opacity: 1; transform: translateY(0); }
+        }
         
         * {
           box-sizing: border-box;
@@ -4274,9 +4279,13 @@ function LifeNoodles() {
       `}</style>
 
       {/* Toast notifications */}
-      <div style={{ position: 'fixed', bottom: '5rem', left: '50%', transform: 'translateX(-50%)', zIndex: 9999, display: 'flex', flexDirection: 'column', gap: '0.5rem', alignItems: 'center', pointerEvents: 'none' }}>
+      <div style={{ position: 'fixed', top: '1rem', left: '50%', transform: 'translateX(-50%)', zIndex: 9999, display: 'flex', flexDirection: 'column', gap: '0.5rem', alignItems: 'center', pointerEvents: 'none' }}>
         {toasts.map(toast => (
-          <div key={toast.id} style={{ background: toast.type === 'error' ? '#EF4444' : '#10B981', color: 'white', padding: '0.75rem 1.5rem', borderRadius: 12, fontSize: '0.9rem', fontWeight: 600, boxShadow: '0 4px 20px rgba(0,0,0,0.2)', animation: 'slideUpPanel 0.3s ease-out', whiteSpace: 'nowrap' }}>
+          <div key={toast.id} style={{ background: toast.type === 'error' ? '#EF4444' : '#10B981', color: 'white', padding: '0.6rem 1.1rem', borderRadius: 99, fontSize: '0.875rem', fontWeight: 600, boxShadow: '0 4px 24px rgba(0,0,0,0.22)', animation: 'slideDownToast 0.25s ease-out', whiteSpace: 'nowrap', display: 'flex', alignItems: 'center', gap: '0.45rem' }}>
+            {toast.type === 'error'
+              ? <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>
+              : <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
+            }
             {toast.message}
           </div>
         ))}
