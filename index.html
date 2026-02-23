@@ -58,7 +58,7 @@ const DEFAULT_CATEGORIES = {
   Relationship: '#EC4899'    // Pink
 };
 
-const APP_VERSION = 'v1.0.4';
+const APP_VERSION = 'v1.1.0';
 
 // Security helpers
 const isValidHex = (str) => typeof str === 'string' && /^#[0-9A-Fa-f]{6}$/.test(str);
@@ -73,6 +73,58 @@ const INITIAL_MILESTONES = [
   { id: 2, name: 'New Hobby', category: 'Hobby', startMonth: 3, startYear: _cy - 7, endMonth: 8, endYear: _cy - 3, ongoing: false, hypothetical: false, notes: '', subEvents: [] },
   { id: 3, name: 'Career Start', category: 'Career', startMonth: 6, startYear: _cy - 11, endMonth: 12, endYear: _cy - 7, ongoing: false, hypothetical: false, notes: '', subEvents: [] },
   { id: 4, name: 'Fitness Challenge', category: 'Health', startMonth: 1, startYear: _cy - 6, endMonth: 10, endYear: _cy - 5, ongoing: false, hypothetical: false, notes: '', subEvents: [] }
+];
+
+const EXAMPLES = [
+  {
+    id: 'jordan',
+    name: 'Jordan — Software Developer',
+    description: 'From CS degree to freelancing, open source side projects, and a first home.',
+    milestones: [
+      { id: 9001, name: 'School', category: 'Education', startMonth: 9, startYear: 2001, endMonth: 6, endYear: 2013, ongoing: false, hypothetical: false, notes: 'Primary and secondary school.', subEvents: [] },
+      { id: 9002, name: 'Computer Science Degree', category: 'Education', startMonth: 9, startYear: 2013, endMonth: 6, endYear: 2017, ongoing: false, hypothetical: false, notes: 'Specialised in machine learning. First Class Honours.', subEvents: [{ id: 9101, name: 'Hackathon win', month: 3, year: 2015, notes: 'Won £500 prize at a 48-hour event.' }, { id: 9102, name: 'Graduated', month: 6, year: 2017, notes: 'First Class Honours.' }] },
+      { id: 9003, name: 'Junior Developer', category: 'Career', startMonth: 7, startYear: 2017, endMonth: 12, endYear: 2019, ongoing: false, hypothetical: false, notes: 'First role at a fintech startup in Manchester.', subEvents: [] },
+      { id: 9004, name: 'Open Source Projects', category: 'Hobby', startMonth: 1, startYear: 2018, endMonth: 1, endYear: 2026, ongoing: true, hypothetical: false, notes: 'Contributing to various tools in spare time.', subEvents: [] },
+      { id: 9005, name: 'Relationship with Sam', category: 'Relationship', startMonth: 3, startYear: 2019, endMonth: 1, endYear: 2026, ongoing: true, hypothetical: false, notes: '', subEvents: [{ id: 9103, name: 'Moved in together', month: 6, year: 2021, notes: 'Rented a flat in Bristol.' }] },
+      { id: 9006, name: 'Senior Developer', category: 'Career', startMonth: 1, startYear: 2020, endMonth: 6, endYear: 2023, ongoing: false, hypothetical: false, notes: 'Promoted and relocated to the Bristol office.', subEvents: [] },
+      { id: 9007, name: 'Bought First Home', category: 'Personal', startMonth: 12, startYear: 2022, endMonth: 12, endYear: 2022, ongoing: false, hypothetical: false, notes: 'Two-bed flat in Bristol city centre.', subEvents: [] },
+      { id: 9008, name: 'Freelancing', category: 'Career', startMonth: 7, startYear: 2023, endMonth: 1, endYear: 2026, ongoing: true, hypothetical: false, notes: 'Working independently with three regular clients.', subEvents: [] },
+      { id: 9009, name: 'Marathon Training', category: 'Health', startMonth: 1, startYear: 2024, endMonth: 1, endYear: 2026, ongoing: true, hypothetical: false, notes: 'Training for the London Marathon.', subEvents: [{ id: 9104, name: 'First marathon completed', month: 4, year: 2024, notes: '4h 12m finish time.' }] },
+    ]
+  },
+  {
+    id: 'maya',
+    name: 'Maya — Primary School Teacher',
+    description: 'A life dedicated to education, family, and community in Manchester.',
+    milestones: [
+      { id: 9010, name: 'School', category: 'Education', startMonth: 9, startYear: 1993, endMonth: 6, endYear: 2006, ongoing: false, hypothetical: false, notes: '', subEvents: [] },
+      { id: 9011, name: 'Education Degree', category: 'Education', startMonth: 9, startYear: 2006, endMonth: 6, endYear: 2010, ongoing: false, hypothetical: false, notes: 'BEd Primary Education at Manchester Met.', subEvents: [{ id: 9105, name: 'Graduated', month: 6, year: 2010, notes: '' }] },
+      { id: 9012, name: 'NQT Year', category: 'Career', startMonth: 9, startYear: 2010, endMonth: 8, endYear: 2011, ongoing: false, hypothetical: false, notes: 'Newly Qualified Teacher year at Riverside Primary.', subEvents: [] },
+      { id: 9013, name: 'Class Teacher', category: 'Career', startMonth: 9, startYear: 2011, endMonth: 8, endYear: 2020, ongoing: false, hypothetical: false, notes: 'Year 3 and 4 teacher at Meadow Primary School.', subEvents: [] },
+      { id: 9014, name: 'Married Daniel', category: 'Relationship', startMonth: 6, startYear: 2015, endMonth: 6, endYear: 2026, ongoing: true, hypothetical: false, notes: 'Married in the Lake District.', subEvents: [] },
+      { id: 9015, name: 'Lena born', category: 'Personal', startMonth: 3, startYear: 2016, endMonth: 3, endYear: 2016, ongoing: false, hypothetical: false, notes: 'First child.', subEvents: [] },
+      { id: 9016, name: 'Family Home', category: 'Personal', startMonth: 9, startYear: 2017, endMonth: 9, endYear: 2026, ongoing: true, hypothetical: false, notes: 'Bought a 3-bed semi in Didsbury.', subEvents: [] },
+      { id: 9017, name: 'Noah born', category: 'Personal', startMonth: 8, startYear: 2018, endMonth: 8, endYear: 2018, ongoing: false, hypothetical: false, notes: 'Second child.', subEvents: [] },
+      { id: 9018, name: 'Head of Year', category: 'Career', startMonth: 9, startYear: 2020, endMonth: 9, endYear: 2026, ongoing: true, hypothetical: false, notes: 'Promoted to Head of Year 3–4 at Meadow Primary.', subEvents: [] },
+      { id: 9019, name: 'Community Garden', category: 'Hobby', startMonth: 4, startYear: 2021, endMonth: 4, endYear: 2026, ongoing: true, hypothetical: false, notes: 'Running a school community garden with parents and pupils.', subEvents: [] },
+    ]
+  },
+  {
+    id: 'sam',
+    name: 'Sam — Entrepreneur',
+    description: 'Two startups, one acquisition, a sabbatical, and lessons learned the hard way.',
+    milestones: [
+      { id: 9020, name: 'School', category: 'Education', startMonth: 9, startYear: 1985, endMonth: 6, endYear: 1998, ongoing: false, hypothetical: false, notes: '', subEvents: [] },
+      { id: 9021, name: 'Business Degree', category: 'Education', startMonth: 9, startYear: 1998, endMonth: 6, endYear: 2002, ongoing: false, hypothetical: false, notes: 'BSc Business and Marketing.', subEvents: [] },
+      { id: 9022, name: 'Marketing Director', category: 'Career', startMonth: 7, startYear: 2002, endMonth: 12, endYear: 2007, ongoing: false, hypothetical: false, notes: 'Rose to Marketing Director at a global FMCG company.', subEvents: [] },
+      { id: 9023, name: 'First Startup', category: 'Career', startMonth: 1, startYear: 2008, endMonth: 11, endYear: 2009, ongoing: false, hypothetical: false, notes: 'E-commerce platform — ran out of runway after 23 months.', subEvents: [{ id: 9106, name: 'Launched MVP', month: 6, year: 2008, notes: '' }, { id: 9107, name: 'Closed doors', month: 11, year: 2009, notes: 'Lessons in hiring and cash flow.' }] },
+      { id: 9024, name: 'Strategy Consulting', category: 'Career', startMonth: 1, startYear: 2010, endMonth: 3, endYear: 2012, ongoing: false, hypothetical: false, notes: 'Independent consultant while planning next venture.', subEvents: [] },
+      { id: 9025, name: 'SaaS Startup', category: 'Career', startMonth: 4, startYear: 2012, endMonth: 6, endYear: 2019, ongoing: false, hypothetical: false, notes: 'B2B analytics platform, grew to 40 staff before acquisition.', subEvents: [{ id: 9108, name: 'Seed round closed', month: 10, year: 2012, notes: '£800k raised.' }, { id: 9109, name: 'Series A', month: 3, year: 2015, notes: '£4.2m raised.' }, { id: 9110, name: 'Acquired', month: 6, year: 2019, notes: 'Acquired by a US firm.' }] },
+      { id: 9026, name: 'Sabbatical', category: 'Travel', startMonth: 7, startYear: 2019, endMonth: 6, endYear: 2020, ongoing: false, hypothetical: false, notes: 'Travelled through South America and Japan. Completely offline.', subEvents: [] },
+      { id: 9027, name: 'Angel Investing', category: 'Career', startMonth: 7, startYear: 2020, endMonth: 7, endYear: 2026, ongoing: true, hypothetical: false, notes: 'Active angel investor in 11 early-stage startups.', subEvents: [] },
+      { id: 9028, name: 'Climate Tech Venture', category: 'Career', startMonth: 1, startYear: 2022, endMonth: 1, endYear: 2026, ongoing: true, hypothetical: false, notes: 'Building a carbon markets platform.', subEvents: [] },
+    ]
+  },
 ];
 
 function LifeNoodles() {
@@ -121,6 +173,9 @@ function LifeNoodles() {
   const [confirmDeleteId, setConfirmDeleteId] = useState(null);
   const [pendingImport, setPendingImport] = useState(null); // { milestones, categories, count }
   const [exportingPNG, setExportingPNG] = useState(false);
+  const [showExamplesMenu, setShowExamplesMenu] = useState(false);
+  const [showClearConfirm, setShowClearConfirm] = useState(false);
+  const [clearConfirmText, setClearConfirmText] = useState('');
   const svgRef = useRef(null);
   const fileInputRef = useRef(null);
   const timelineRef = useRef(null);
@@ -641,6 +696,26 @@ function LifeNoodles() {
     const mm = String(now.getMonth() + 1).padStart(2, '0');
     const dd = String(now.getDate()).padStart(2, '0');
     return `LifeNoodles-${yyyy}-${mm}-${dd}.${extension}`;
+  };
+
+  // Load an example life
+  const loadExample = (example) => {
+    setMilestones(example.milestones);
+    setCategories(DEFAULT_CATEGORIES);
+    setVisibleCategories(Object.keys(DEFAULT_CATEGORIES));
+    setSelectedMilestone(null);
+    setShowInstructions(false);
+    setShowExamplesMenu(false);
+    showToast(`Loaded: ${example.name}`);
+  };
+
+  // Clear all milestones
+  const clearAllMilestones = () => {
+    setMilestones([]);
+    setSelectedMilestone(null);
+    setShowClearConfirm(false);
+    setClearConfirmText('');
+    showToast('All noodles cleared');
   };
 
   // Export/Import Functions
@@ -1905,6 +1980,17 @@ function LifeNoodles() {
             Instructions
           </button>
 
+          {/* Clear All */}
+          <button
+            onClick={() => setShowClearConfirm(true)}
+            style={{ padding: '0.75rem 1.5rem', background: 'white', color: '#EF4444', border: '2px solid #FECACA', borderRadius: '50px', fontSize: '1rem', fontWeight: 600, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '0.5rem', transition: 'all 0.3s ease' }}
+            onMouseEnter={(e) => { e.target.style.transform = 'translateY(-2px)'; e.target.style.boxShadow = '0 10px 30px rgba(239,68,68,0.15)'; }}
+            onMouseLeave={(e) => { e.target.style.transform = 'translateY(0)'; e.target.style.boxShadow = 'none'; }}
+          >
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/></svg>
+            Clear All
+          </button>
+
           {/* Export Data */}
           <div style={{ position: 'relative' }} data-data-export-menu>
             <button
@@ -2195,39 +2281,61 @@ function LifeNoodles() {
               animation: 'slideUp 0.4s cubic-bezier(0.34, 1.56, 0.64, 1)'
             }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2rem' }}>
-              <h2 style={{ 
-                fontSize: '1.75rem', 
-                color: '#1F2937',
-                fontWeight: 700,
-                margin: 0
-              }}>
-                Welcome to Life Noodles
+              <h2 style={{ fontSize: '1.75rem', color: '#1F2937', fontWeight: 700, margin: 0 }}>
+                {showExamplesMenu ? 'Example Lives' : 'Welcome to Life Noodles'}
               </h2>
-              <button
-                onClick={() => setShowInstructions(false)}
-                style={{
-                  background: '#F3F4F6',
-                  border: 'none',
-                  borderRadius: '10px',
-                  width: '44px',
-                  height: '44px',
-                  minWidth: '44px',
-                  minHeight: '44px',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  cursor: 'pointer',
-                  color: '#374151',
-                  transition: 'all 0.2s',
-                  flexShrink: 0
-                }}
-                onMouseEnter={(e) => e.target.style.background = '#E5E7EB'}
-                onMouseLeave={(e) => e.target.style.background = '#F3F4F6'}
-              >
-                <X size={22} />
-              </button>
+              <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
+                {!showExamplesMenu ? (
+                  <button
+                    onClick={() => setShowExamplesMenu(true)}
+                    style={{ background: '#EEF2FF', border: 'none', borderRadius: '50px', padding: '0.5rem 1rem', fontSize: '0.875rem', fontWeight: 600, color: '#4F46E5', cursor: 'pointer', whiteSpace: 'nowrap' }}
+                  >
+                    ✨ Examples
+                  </button>
+                ) : (
+                  <button
+                    onClick={() => setShowExamplesMenu(false)}
+                    style={{ background: '#F3F4F6', border: 'none', borderRadius: '50px', padding: '0.5rem 1rem', fontSize: '0.875rem', fontWeight: 600, color: '#6B7280', cursor: 'pointer', whiteSpace: 'nowrap' }}
+                  >
+                    ← Instructions
+                  </button>
+                )}
+                <button
+                  onClick={() => { setShowInstructions(false); setShowExamplesMenu(false); }}
+                  style={{ background: '#F3F4F6', border: 'none', borderRadius: '10px', width: '44px', height: '44px', minWidth: '44px', minHeight: '44px', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', color: '#374151', transition: 'all 0.2s', flexShrink: 0 }}
+                  onMouseEnter={(e) => e.target.style.background = '#E5E7EB'}
+                  onMouseLeave={(e) => e.target.style.background = '#F3F4F6'}
+                >
+                  <X size={22} />
+                </button>
+              </div>
             </div>
 
+            {showExamplesMenu ? (
+              <div>
+                <p style={{ color: '#6B7280', marginTop: 0, marginBottom: '1.5rem', fontSize: '0.95rem' }}>
+                  Load a ready-made timeline to see how Life Noodles works. This will replace your current noodles.
+                </p>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', marginBottom: '1.5rem' }}>
+                  {EXAMPLES.map(ex => (
+                    <div key={ex.id} style={{ border: '2px solid #E5E7EB', borderRadius: 16, padding: '1.25rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '1rem' }}>
+                      <div>
+                        <div style={{ fontWeight: 700, color: '#1F2937', fontSize: '1rem', marginBottom: '0.25rem' }}>{ex.name}</div>
+                        <div style={{ color: '#6B7280', fontSize: '0.875rem' }}>{ex.description}</div>
+                        <div style={{ color: '#9CA3AF', fontSize: '0.75rem', marginTop: '0.35rem' }}>{ex.milestones.length} noodles</div>
+                      </div>
+                      <button
+                        onClick={() => loadExample(ex)}
+                        style={{ background: '#4F46E5', color: 'white', border: 'none', borderRadius: 12, padding: '0.6rem 1.1rem', fontSize: '0.875rem', fontWeight: 700, cursor: 'pointer', whiteSpace: 'nowrap', flexShrink: 0 }}
+                      >
+                        Load
+                      </button>
+                    </div>
+                  ))}
+                </div>
+                <p style={{ margin: 0, textAlign: 'right', fontSize: '0.75rem', color: '#9CA3AF' }}>{APP_VERSION}</p>
+              </div>
+            ) : (
             <div style={{ lineHeight: '1.8', color: '#4B5563', fontSize: '1rem' }}>
               <p style={{ marginTop: 0, marginBottom: '1.5rem' }}>
                 Life Noodles is a personal timeline for visualising your life's commitments — past, present, and planned. Your data is saved automatically in your browser.
@@ -2283,6 +2391,7 @@ function LifeNoodles() {
                 {APP_VERSION}
               </p>
             </div>
+            )}
           </div>
         </div>
       )}
@@ -4155,6 +4264,7 @@ function LifeNoodles() {
                     { label: 'Instructions', icon: <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg>, color: '#06B6D4', action: () => { setShowMobileActions(false); setShowInstructions(true); } },
                     { label: 'Export Image', icon: <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/></svg>, color: '#F97316', action: () => setShowExportImageSubMenu(true) },
                     { label: 'Export Data', icon: <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>, color: '#EC4899', action: () => setShowExportSubMenu(true) },
+                    { label: 'Clear All', icon: <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/></svg>, color: '#EF4444', action: () => { setShowMobileActions(false); setShowClearConfirm(true); } },
                   ].map(({ label, icon, color, action }) => (
                     <button
                       key={label}
@@ -4526,6 +4636,35 @@ function LifeNoodles() {
             <div style={{ display: 'flex', gap: '0.75rem', justifyContent: 'center' }}>
               <button onClick={() => setConfirmDeleteId(null)} style={{ flex: 1, padding: '0.75rem', borderRadius: 12, border: '2px solid #E5E7EB', background: 'white', fontWeight: 600, cursor: 'pointer', color: '#6B7280', fontSize: '0.9rem', fontFamily: "'Syne', sans-serif" }}>Cancel</button>
               <button onClick={confirmDelete} style={{ flex: 1, padding: '0.75rem', borderRadius: 12, border: 'none', background: '#EF4444', color: 'white', fontWeight: 700, cursor: 'pointer', fontSize: '0.9rem', fontFamily: "'Syne', sans-serif" }}>Delete</button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Clear All confirmation */}
+      {showClearConfirm && (
+        <div onClick={() => { setShowClearConfirm(false); setClearConfirmText(''); }} style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.5)', backdropFilter: 'blur(8px)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 2000, padding: '1rem' }}>
+          <div onClick={e => e.stopPropagation()} style={{ background: 'white', borderRadius: 24, padding: '2rem', maxWidth: 420, width: '100%', boxShadow: '0 20px 60px rgba(0,0,0,0.3)', animation: 'slideUp 0.3s ease' }}>
+            <div style={{ width: 56, height: 56, borderRadius: '50%', background: '#FEE2E2', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 1.25rem' }}>
+              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#EF4444" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/></svg>
+            </div>
+            <h3 style={{ textAlign: 'center', fontSize: '1.25rem', fontWeight: 700, color: '#1F2937', margin: '0 0 0.5rem' }}>Clear all noodles?</h3>
+            <p style={{ textAlign: 'center', color: '#6B7280', fontSize: '0.9rem', margin: '0 0 1.5rem', lineHeight: 1.6 }}>
+              This will permanently delete all your milestones. Consider exporting your data first.<br/>
+              To confirm, type <strong>delete</strong> below.
+            </p>
+            <input
+              type="text"
+              value={clearConfirmText}
+              onChange={e => setClearConfirmText(e.target.value)}
+              onKeyDown={e => { if (e.key === 'Enter' && clearConfirmText === 'delete') clearAllMilestones(); }}
+              placeholder="Type delete to confirm"
+              autoFocus
+              style={{ width: '100%', padding: '0.75rem 1rem', borderRadius: 12, border: `2px solid ${clearConfirmText === 'delete' ? '#EF4444' : '#E5E7EB'}`, fontSize: '1rem', fontFamily: 'inherit', outline: 'none', marginBottom: '1rem', boxSizing: 'border-box', textAlign: 'center', letterSpacing: '0.05em' }}
+            />
+            <div style={{ display: 'flex', gap: '0.75rem' }}>
+              <button onClick={() => { setShowClearConfirm(false); setClearConfirmText(''); }} style={{ flex: 1, padding: '0.75rem', borderRadius: 12, border: '2px solid #E5E7EB', background: 'white', fontWeight: 600, cursor: 'pointer', color: '#6B7280', fontSize: '0.9rem', fontFamily: 'inherit' }}>Cancel</button>
+              <button onClick={clearAllMilestones} disabled={clearConfirmText !== 'delete'} style={{ flex: 1, padding: '0.75rem', borderRadius: 12, border: 'none', background: clearConfirmText === 'delete' ? '#EF4444' : '#F3F4F6', color: clearConfirmText === 'delete' ? 'white' : '#9CA3AF', fontWeight: 700, cursor: clearConfirmText === 'delete' ? 'pointer' : 'default', fontSize: '0.9rem', fontFamily: 'inherit', transition: 'all 0.2s' }}>Clear All</button>
             </div>
           </div>
         </div>
