@@ -2,7 +2,7 @@
 
 A personal timeline PWA for visualising your life's commitments — past, present, and planned.
 
-![Life Noodles](icons/icon-512.svg)
+<img src="icons/icon-512.svg" width="80" alt="Life Noodles icon"/>
 
 ## What is it?
 
