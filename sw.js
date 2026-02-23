@@ -1,4 +1,4 @@
-const CACHE_NAME = 'life-noodles-v2';
+const CACHE_NAME = 'life-noodles-v3';
 const STATIC_CACHE_NAME = 'life-noodles-cdn-v2';
 
 const APP_SHELL = [
