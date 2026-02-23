@@ -58,7 +58,7 @@ const DEFAULT_CATEGORIES = {
   Relationship: '#EC4899'    // Pink
 };
 
-const APP_VERSION = 'v1.1.0';
+const APP_VERSION = 'v1.1.1';
 
 // Security helpers
 const isValidHex = (str) => typeof str === 'string' && /^#[0-9A-Fa-f]{6}$/.test(str);
@@ -703,7 +703,7 @@ function LifeNoodles() {
     setMilestones(example.milestones);
     setCategories(DEFAULT_CATEGORIES);
     setVisibleCategories(Object.keys(DEFAULT_CATEGORIES));
-    setSelectedMilestone(null);
+    setSelectedId(null);
     setShowInstructions(false);
     setShowExamplesMenu(false);
     showToast(`Loaded: ${example.name}`);
@@ -712,7 +712,7 @@ function LifeNoodles() {
   // Clear all milestones
   const clearAllMilestones = () => {
     setMilestones([]);
-    setSelectedMilestone(null);
+    setSelectedId(null);
     setShowClearConfirm(false);
     setClearConfirmText('');
     showToast('All noodles cleared');
