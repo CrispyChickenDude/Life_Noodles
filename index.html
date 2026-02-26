@@ -58,7 +58,7 @@ const DEFAULT_CATEGORIES = {
   Relationship: '#EC4899'    // Pink
 };
 
-const APP_VERSION = 'v1.1.1';
+const APP_VERSION = 'v1.2.0';
 
 // Security helpers
 const isValidHex = (str) => typeof str === 'string' && /^#[0-9A-Fa-f]{6}$/.test(str);
@@ -77,52 +77,125 @@ const INITIAL_MILESTONES = [
 
 const EXAMPLES = [
   {
-    id: 'jordan',
-    name: 'Jordan — Software Developer',
-    description: 'From CS degree to freelancing, open source side projects, and a first home.',
+    id: 'zara',
+    name: 'Zara — Photographer, age 25',
+    description: 'From Manchester to Southeast Asia to London — building a creative career one frame at a time.',
     milestones: [
-      { id: 9001, name: 'School', category: 'Education', startMonth: 9, startYear: 2001, endMonth: 6, endYear: 2013, ongoing: false, hypothetical: false, notes: 'Primary and secondary school.', subEvents: [] },
-      { id: 9002, name: 'Computer Science Degree', category: 'Education', startMonth: 9, startYear: 2013, endMonth: 6, endYear: 2017, ongoing: false, hypothetical: false, notes: 'Specialised in machine learning. First Class Honours.', subEvents: [{ id: 9101, name: 'Hackathon win', month: 3, year: 2015, notes: 'Won £500 prize at a 48-hour event.' }, { id: 9102, name: 'Graduated', month: 6, year: 2017, notes: 'First Class Honours.' }] },
-      { id: 9003, name: 'Junior Developer', category: 'Career', startMonth: 7, startYear: 2017, endMonth: 12, endYear: 2019, ongoing: false, hypothetical: false, notes: 'First role at a fintech startup in Manchester.', subEvents: [] },
-      { id: 9004, name: 'Open Source Projects', category: 'Hobby', startMonth: 1, startYear: 2018, endMonth: 1, endYear: 2026, ongoing: true, hypothetical: false, notes: 'Contributing to various tools in spare time.', subEvents: [] },
-      { id: 9005, name: 'Relationship with Sam', category: 'Relationship', startMonth: 3, startYear: 2019, endMonth: 1, endYear: 2026, ongoing: true, hypothetical: false, notes: '', subEvents: [{ id: 9103, name: 'Moved in together', month: 6, year: 2021, notes: 'Rented a flat in Bristol.' }] },
-      { id: 9006, name: 'Senior Developer', category: 'Career', startMonth: 1, startYear: 2020, endMonth: 6, endYear: 2023, ongoing: false, hypothetical: false, notes: 'Promoted and relocated to the Bristol office.', subEvents: [] },
-      { id: 9007, name: 'Bought First Home', category: 'Personal', startMonth: 12, startYear: 2022, endMonth: 12, endYear: 2022, ongoing: false, hypothetical: false, notes: 'Two-bed flat in Bristol city centre.', subEvents: [] },
-      { id: 9008, name: 'Freelancing', category: 'Career', startMonth: 7, startYear: 2023, endMonth: 1, endYear: 2026, ongoing: true, hypothetical: false, notes: 'Working independently with three regular clients.', subEvents: [] },
-      { id: 9009, name: 'Marathon Training', category: 'Health', startMonth: 1, startYear: 2024, endMonth: 1, endYear: 2026, ongoing: true, hypothetical: false, notes: 'Training for the London Marathon.', subEvents: [{ id: 9104, name: 'First marathon completed', month: 4, year: 2024, notes: '4h 12m finish time.' }] },
+      { id: 1001, name: 'School', category: 'Education', startMonth: 9, startYear: 2006, endMonth: 7, endYear: 2019, ongoing: false, hypothetical: false, notes: 'Primary then secondary school in Manchester.', subEvents: [] },
+      { id: 1002, name: 'Photography Degree', category: 'Education', startMonth: 9, startYear: 2019, endMonth: 6, endYear: 2022, ongoing: false, hypothetical: false, notes: 'BSc Photography & Digital Media, Manchester Metropolitan. First Class Honours.', subEvents: [
+        { id: 2001, name: 'Shortlisted: Student Photographer of the Year', month: 5, year: 2021, notes: '' },
+        { id: 2002, name: 'Graduated — First Class Honours', month: 6, year: 2022, notes: '' },
+      ]},
+      { id: 1003, name: 'Barista', category: 'Career', startMonth: 9, startYear: 2019, endMonth: 6, endYear: 2022, ongoing: false, hypothetical: false, notes: 'Part-time at North Star Coffee to fund university.', subEvents: [] },
+      { id: 1004, name: 'YouTube & Photography Blog', category: 'Hobby', startMonth: 1, startYear: 2020, endMonth: 2, endYear: 2026, ongoing: true, hypothetical: false, notes: 'Documentary shorts and travel photography. Grew to 85,000 subscribers by 2026.', subEvents: [
+        { id: 2003, name: '10,000 subscribers', month: 8, year: 2021, notes: '' },
+        { id: 2004, name: '50,000 subscribers', month: 11, year: 2023, notes: '' },
+        { id: 2005, name: 'First brand partnership deal', month: 3, year: 2024, notes: 'Partnership with a camera brand worth £8,000.' },
+      ]},
+      { id: 1005, name: 'Backpacked Southeast Asia', category: 'Travel', startMonth: 7, startYear: 2022, endMonth: 5, endYear: 2023, ongoing: false, hypothetical: false, notes: '11 months across Vietnam, Cambodia, Thailand, and Indonesia. Shot a documentary on Mekong fishing communities that screened at Sheffield DocFest.', subEvents: [
+        { id: 2006, name: 'Arrived in Hanoi', month: 7, year: 2022, notes: '' },
+        { id: 2007, name: 'Documentary screened at Sheffield DocFest', month: 2, year: 2023, notes: '' },
+      ]},
+      { id: 1006, name: 'Moved to London', category: 'Personal', startMonth: 6, startYear: 2023, endMonth: 2, endYear: 2026, ongoing: true, hypothetical: false, notes: 'Flat share in Hackney with two friends from university.', subEvents: [] },
+      { id: 1007, name: 'Junior Creative, Agency', category: 'Career', startMonth: 7, startYear: 2023, endMonth: 9, endYear: 2024, ongoing: false, hypothetical: false, notes: 'Photo and video production at a boutique creative agency in Shoreditch.', subEvents: [
+        { id: 2008, name: 'Campaign featured in Campaign Magazine', month: 3, year: 2024, notes: '' },
+      ]},
+      { id: 1008, name: 'Freelance Photographer', category: 'Career', startMonth: 10, startYear: 2024, endMonth: 2, endYear: 2026, ongoing: true, hypothetical: false, notes: 'Commercial, editorial, and documentary commissions. First full year billing over £40k.', subEvents: [
+        { id: 2009, name: 'Solo exhibition: Tidal', month: 11, year: 2024, notes: 'Group show at a Hackney gallery. 200 attendees on opening night.' },
+      ]},
+      { id: 1009, name: 'Rock Climbing', category: 'Hobby', startMonth: 11, startYear: 2021, endMonth: 2, endYear: 2026, ongoing: true, hypothetical: false, notes: 'Started indoors, now climbs trad routes outdoors. Completed the Cuillin Ridge traverse in Skye, 2025.', subEvents: [
+        { id: 2010, name: 'Cuillin Ridge traverse, Skye', month: 8, year: 2025, notes: '11 km of exposed ridge and technical scrambling.' },
+      ]},
+      { id: 1010, name: 'With Felix', category: 'Relationship', startMonth: 9, startYear: 2024, endMonth: 2, endYear: 2026, ongoing: true, hypothetical: false, notes: 'Met at a climbing competition in Brighton.', subEvents: [] },
     ]
   },
   {
-    id: 'maya',
-    name: 'Maya — Primary School Teacher',
-    description: 'A life dedicated to education, family, and community in Manchester.',
+    id: 'marcus',
+    name: 'Marcus — Marine Scientist, age 40',
+    description: 'From coral reefs to conference rooms — a life in service of the ocean.',
     milestones: [
-      { id: 9010, name: 'School', category: 'Education', startMonth: 9, startYear: 1993, endMonth: 6, endYear: 2006, ongoing: false, hypothetical: false, notes: '', subEvents: [] },
-      { id: 9011, name: 'Education Degree', category: 'Education', startMonth: 9, startYear: 2006, endMonth: 6, endYear: 2010, ongoing: false, hypothetical: false, notes: 'BEd Primary Education at Manchester Met.', subEvents: [{ id: 9105, name: 'Graduated', month: 6, year: 2010, notes: '' }] },
-      { id: 9012, name: 'NQT Year', category: 'Career', startMonth: 9, startYear: 2010, endMonth: 8, endYear: 2011, ongoing: false, hypothetical: false, notes: 'Newly Qualified Teacher year at Riverside Primary.', subEvents: [] },
-      { id: 9013, name: 'Class Teacher', category: 'Career', startMonth: 9, startYear: 2011, endMonth: 8, endYear: 2020, ongoing: false, hypothetical: false, notes: 'Year 3 and 4 teacher at Meadow Primary School.', subEvents: [] },
-      { id: 9014, name: 'Married Daniel', category: 'Relationship', startMonth: 6, startYear: 2015, endMonth: 6, endYear: 2026, ongoing: true, hypothetical: false, notes: 'Married in the Lake District.', subEvents: [] },
-      { id: 9015, name: 'Lena born', category: 'Personal', startMonth: 3, startYear: 2016, endMonth: 3, endYear: 2016, ongoing: false, hypothetical: false, notes: 'First child.', subEvents: [] },
-      { id: 9016, name: 'Family Home', category: 'Personal', startMonth: 9, startYear: 2017, endMonth: 9, endYear: 2026, ongoing: true, hypothetical: false, notes: 'Bought a 3-bed semi in Didsbury.', subEvents: [] },
-      { id: 9017, name: 'Noah born', category: 'Personal', startMonth: 8, startYear: 2018, endMonth: 8, endYear: 2018, ongoing: false, hypothetical: false, notes: 'Second child.', subEvents: [] },
-      { id: 9018, name: 'Head of Year', category: 'Career', startMonth: 9, startYear: 2020, endMonth: 9, endYear: 2026, ongoing: true, hypothetical: false, notes: 'Promoted to Head of Year 3–4 at Meadow Primary.', subEvents: [] },
-      { id: 9019, name: 'Community Garden', category: 'Hobby', startMonth: 4, startYear: 2021, endMonth: 4, endYear: 2026, ongoing: true, hypothetical: false, notes: 'Running a school community garden with parents and pupils.', subEvents: [] },
+      { id: 3001, name: 'School', category: 'Education', startMonth: 9, startYear: 1991, endMonth: 7, endYear: 2003, ongoing: false, hypothetical: false, notes: 'Plymouth. More interested in rock pools than football from the start.', subEvents: [] },
+      { id: 3002, name: 'Marine Biology BSc', category: 'Education', startMonth: 9, startYear: 2003, endMonth: 7, endYear: 2007, ongoing: false, hypothetical: false, notes: 'University of Plymouth. Graduated 2:1. A field expedition to the Belizean coral reef in second year changed everything.', subEvents: [
+        { id: 4001, name: 'Belize coral reef expedition', month: 6, year: 2005, notes: 'Two weeks surveying bleaching on the Mesoamerican Barrier Reef.' },
+        { id: 4002, name: 'Graduated — 2:1', month: 7, year: 2007, notes: '' },
+      ]},
+      { id: 3003, name: 'Research Assistant, NOC', category: 'Career', startMonth: 9, startYear: 2007, endMonth: 9, endYear: 2009, ongoing: false, hypothetical: false, notes: 'National Oceanography Centre, Southampton. Supported deep-sea survey expeditions in the North Atlantic.', subEvents: [] },
+      { id: 3004, name: 'PhD — Ocean Acidification', category: 'Education', startMonth: 10, startYear: 2009, endMonth: 2, endYear: 2014, ongoing: false, hypothetical: false, notes: 'Impact of ocean acidification on shellfish larvae. NERC-funded at University of Exeter. Viva passed with no corrections.', subEvents: [
+        { id: 4003, name: 'First paper published', month: 5, year: 2012, notes: 'Published in Marine Biology. Became highly cited within two years.' },
+        { id: 4004, name: 'PhD viva passed — no corrections', month: 2, year: 2014, notes: '' },
+      ]},
+      { id: 3005, name: 'Postdoc Researcher, Perth', category: 'Career', startMonth: 4, startYear: 2014, endMonth: 12, endYear: 2016, ongoing: false, hypothetical: false, notes: 'University of Western Australia. Studied coral bleaching on the North West Shelf during the catastrophic 2015–16 mass bleaching event.', subEvents: [
+        { id: 4005, name: 'Moved to Perth', month: 4, year: 2014, notes: '' },
+        { id: 4006, name: 'Witnessed mass bleaching event', month: 2, year: 2016, notes: 'A defining moment. Turned him towards conservation work.' },
+      ]},
+      { id: 3006, name: 'Senior Research Scientist, NERC', category: 'Career', startMonth: 1, startYear: 2017, endMonth: 9, endYear: 2019, ongoing: false, hypothetical: false, notes: 'North Sea ecosystem change research. Published a landmark paper in Nature (2018) on climate-driven species range shifts. Over 200 citations within 18 months.', subEvents: [
+        { id: 4007, name: 'Paper published in Nature', month: 3, year: 2018, notes: 'The most cited paper of his career.' },
+      ]},
+      { id: 3007, name: 'Marine Conservation NGO', category: 'Career', startMonth: 10, startYear: 2019, endMonth: 12, endYear: 2021, ongoing: false, hypothetical: false, notes: 'Science lead for UK Marine Protected Areas programme at Blue Marine Foundation. Left academia for good.', subEvents: [] },
+      { id: 3008, name: 'Director of Science', category: 'Career', startMonth: 1, startYear: 2022, endMonth: 2, endYear: 2026, ongoing: true, hypothetical: false, notes: 'Overseeing science strategy, policy advocacy, and field research programmes. Presented at COP27. Helped secure the North Atlantic MPA expansion in 2024.', subEvents: [
+        { id: 4008, name: 'Presented at COP27', month: 11, year: 2022, notes: 'Speaking on MPA effectiveness to government delegates.' },
+        { id: 4009, name: 'North Atlantic MPA expansion passed', month: 6, year: 2024, notes: 'The policy result of five years of work.' },
+      ]},
+      { id: 3009, name: 'Married Priya', category: 'Relationship', startMonth: 6, startYear: 2012, endMonth: 2, endYear: 2026, ongoing: true, hypothetical: false, notes: 'Met at a Plymouth alumni dinner. Married in a small ceremony in Cornwall. Two children: Eli (b.2014) and Nadia (b.2017).', subEvents: [
+        { id: 4010, name: 'Wedding, St Ives', month: 6, year: 2012, notes: 'Thirty guests, a good pub, and perfect weather.' },
+        { id: 4011, name: 'Eli born', month: 9, year: 2014, notes: '' },
+        { id: 4012, name: 'Nadia born', month: 2, year: 2017, notes: '' },
+      ]},
+      { id: 3010, name: 'Family Home, Bristol', category: 'Personal', startMonth: 7, startYear: 2017, endMonth: 2, endYear: 2026, ongoing: true, hypothetical: false, notes: 'Three-bed in Clifton. First real sense of roots after years following research contracts around the world.', subEvents: [] },
+      { id: 3011, name: 'Road Cycling', category: 'Hobby', startMonth: 3, startYear: 2008, endMonth: 2, endYear: 2026, ongoing: true, hypothetical: false, notes: 'Club rides in Plymouth, then long-distance tours. Completed the Transcontinental Race in 2022 — 4,000 km across Europe, unsupported, in 14 days.', subEvents: [
+        { id: 4013, name: 'Transcontinental Race', month: 7, year: 2022, notes: 'Belgium to Greece, 4,000 km, unsupported, 14 days.' },
+      ]},
+      { id: 3012, name: "Father's Dementia", category: 'Health', startMonth: 6, startYear: 2021, endMonth: 2, endYear: 2026, ongoing: true, hypothetical: false, notes: 'Dad diagnosed with vascular dementia at 72. Now in residential care in Plymouth. Marcus visits most weekends.', subEvents: [
+        { id: 4014, name: 'Dad diagnosed', month: 6, year: 2021, notes: '' },
+      ]},
     ]
   },
   {
-    id: 'sam',
-    name: 'Sam — Entrepreneur',
-    description: 'Two startups, one acquisition, a sabbatical, and lessons learned the hard way.',
+    id: 'agnes',
+    name: 'Agnes — Centenarian, age 100',
+    description: 'Born in the shadow of the Great War, a wartime evacuee, NHS pioneer, wife of 55 years, and still going at 100. Sheffield through and through.',
     milestones: [
-      { id: 9020, name: 'School', category: 'Education', startMonth: 9, startYear: 1985, endMonth: 6, endYear: 1998, ongoing: false, hypothetical: false, notes: '', subEvents: [] },
-      { id: 9021, name: 'Business Degree', category: 'Education', startMonth: 9, startYear: 1998, endMonth: 6, endYear: 2002, ongoing: false, hypothetical: false, notes: 'BSc Business and Marketing.', subEvents: [] },
-      { id: 9022, name: 'Marketing Director', category: 'Career', startMonth: 7, startYear: 2002, endMonth: 12, endYear: 2007, ongoing: false, hypothetical: false, notes: 'Rose to Marketing Director at a global FMCG company.', subEvents: [] },
-      { id: 9023, name: 'First Startup', category: 'Career', startMonth: 1, startYear: 2008, endMonth: 11, endYear: 2009, ongoing: false, hypothetical: false, notes: 'E-commerce platform — ran out of runway after 23 months.', subEvents: [{ id: 9106, name: 'Launched MVP', month: 6, year: 2008, notes: '' }, { id: 9107, name: 'Closed doors', month: 11, year: 2009, notes: 'Lessons in hiring and cash flow.' }] },
-      { id: 9024, name: 'Strategy Consulting', category: 'Career', startMonth: 1, startYear: 2010, endMonth: 3, endYear: 2012, ongoing: false, hypothetical: false, notes: 'Independent consultant while planning next venture.', subEvents: [] },
-      { id: 9025, name: 'SaaS Startup', category: 'Career', startMonth: 4, startYear: 2012, endMonth: 6, endYear: 2019, ongoing: false, hypothetical: false, notes: 'B2B analytics platform, grew to 40 staff before acquisition.', subEvents: [{ id: 9108, name: 'Seed round closed', month: 10, year: 2012, notes: '£800k raised.' }, { id: 9109, name: 'Series A', month: 3, year: 2015, notes: '£4.2m raised.' }, { id: 9110, name: 'Acquired', month: 6, year: 2019, notes: 'Acquired by a US firm.' }] },
-      { id: 9026, name: 'Sabbatical', category: 'Travel', startMonth: 7, startYear: 2019, endMonth: 6, endYear: 2020, ongoing: false, hypothetical: false, notes: 'Travelled through South America and Japan. Completely offline.', subEvents: [] },
-      { id: 9027, name: 'Angel Investing', category: 'Career', startMonth: 7, startYear: 2020, endMonth: 7, endYear: 2026, ongoing: true, hypothetical: false, notes: 'Active angel investor in 11 early-stage startups.', subEvents: [] },
-      { id: 9028, name: 'Climate Tech Venture', category: 'Career', startMonth: 1, startYear: 2022, endMonth: 1, endYear: 2026, ongoing: true, hypothetical: false, notes: 'Building a carbon markets platform.', subEvents: [] },
+      { id: 5001, name: 'Childhood, Sheffield', category: 'Personal', startMonth: 1, startYear: 1926, endMonth: 8, endYear: 1931, ongoing: false, hypothetical: false, notes: 'Born 12 January 1926, youngest of four. Father worked at the steelworks. Bramall Lane, two up two down.', subEvents: [] },
+      { id: 5002, name: 'Sheffield Girls Grammar', category: 'Education', startMonth: 9, startYear: 1931, endMonth: 7, endYear: 1944, ongoing: false, hypothetical: false, notes: 'Primary, then won a scholarship to Sheffield Girls Grammar School in 1938. Her headmistress said she had a mind too good to waste.', subEvents: [] },
+      { id: 5003, name: 'Evacuated to Bakewell', category: 'Personal', startMonth: 9, startYear: 1939, endMonth: 6, endYear: 1944, ongoing: false, hypothetical: false, notes: 'Billeted on a farm outside Bakewell for nearly five years. Rarely saw her parents. Learned to milk cows, bake bread, and be entirely self-sufficient.', subEvents: [
+        { id: 6001, name: 'Arrived Bakewell', month: 9, year: 1939, notes: 'Age 13. A brown-paper parcel of clothes and a gas mask.' },
+        { id: 6002, name: 'VE Day celebrations', month: 5, year: 1945, notes: 'Danced in the street on Leopold Square. The war was over.' },
+      ]},
+      { id: 5004, name: 'Telephone Operator, Sheffield GPO', category: 'Career', startMonth: 8, startYear: 1944, endMonth: 3, endYear: 1947, ongoing: false, hypothetical: false, notes: 'Operated the manual telephone exchange. Heard the news of the war ending come down the line before it reached the wireless.', subEvents: [] },
+      { id: 5005, name: 'Married Albert', category: 'Relationship', startMonth: 4, startYear: 1947, endMonth: 1, endYear: 2003, ongoing: false, hypothetical: false, notes: 'Met Albert at the Victoria Ballroom in October 1946. He asked her to dance twice; she refused both times. They were engaged by Christmas. 55 years of marriage.', subEvents: [
+        { id: 6003, name: 'Wedding day', month: 4, year: 1947, notes: 'St Thomas Church. Agnes made her own dress.' },
+        { id: 6004, name: 'Silver Wedding Anniversary', month: 4, year: 1972, notes: '25 years.' },
+        { id: 6005, name: 'Golden Wedding Anniversary', month: 4, year: 1997, notes: '50 years. The whole family came.' },
+        { id: 6006, name: 'Albert passed away', month: 1, year: 2003, notes: 'Heart attack at home, a Tuesday morning. Aged 77. They had 55 years.' },
+      ]},
+      { id: 5006, name: 'Nursing Training', category: 'Education', startMonth: 5, startYear: 1947, endMonth: 6, endYear: 1950, ongoing: false, hypothetical: false, notes: 'SRN training at Royal Hallamshire Hospital. Qualified just as the NHS was founded — among the first generation of NHS nurses.', subEvents: [
+        { id: 6007, name: 'NHS founded — Agnes joins founding staff', month: 7, year: 1948, notes: 'July 5th 1948. She said it was the most important day of her life besides her wedding.' },
+      ]},
+      { id: 5007, name: 'Staff Nurse', category: 'Career', startMonth: 7, startYear: 1950, endMonth: 8, endYear: 1961, ongoing: false, hypothetical: false, notes: "Women's surgical ward, Hallamshire. Raised three children between night shifts. You just got on with it back then.", subEvents: [
+        { id: 6008, name: 'David born', month: 10, year: 1948, notes: 'First child. Now a retired teacher in York.' },
+        { id: 6009, name: 'Jean born', month: 5, year: 1950, notes: 'Second child. Lives in Edinburgh.' },
+        { id: 6010, name: 'Robert born', month: 2, year: 1953, notes: 'Third child. Emigrated to New Zealand, 1981.' },
+      ]},
+      { id: 5008, name: 'Ward Sister', category: 'Career', startMonth: 9, startYear: 1961, endMonth: 6, endYear: 1978, ongoing: false, hypothetical: false, notes: "Head of Women's Surgical. Known for exacting standards and genuine warmth. Mentored over 200 nurses across 17 years as Sister.", subEvents: [
+        { id: 6011, name: 'Commendation: nursing excellence', month: 6, year: 1966, notes: 'Awarded by the Sheffield Regional Hospital Board.' },
+        { id: 6012, name: 'Retired from nursing', month: 6, year: 1978, notes: 'They gave her a silver brooch. She still wears it.' },
+      ]},
+      { id: 5009, name: "Albert's Greengrocer", category: 'Career', startMonth: 3, startYear: 1955, endMonth: 12, endYear: 1981, ongoing: false, hypothetical: false, notes: "Albert's shop on Sharrow Lane. Agnes kept the accounts every evening after her shifts. At peak, three stalls at Sheffield markets.", subEvents: [] },
+      { id: 5010, name: 'Family Home, Sycamore Avenue', category: 'Personal', startMonth: 6, startYear: 1949, endMonth: 3, endYear: 2006, ongoing: false, hypothetical: false, notes: 'The family home for 57 years. Three children, ten grandchildren, and more Christmases than can be counted.', subEvents: [] },
+      { id: 5011, name: "Women's Institute", category: 'Hobby', startMonth: 1, startYear: 1960, endMonth: 12, endYear: 2015, ongoing: false, hypothetical: false, notes: 'Treasurer for 20 years, President for 12. She ran it like a tight ship and nobody complained twice.', subEvents: [
+        { id: 6013, name: 'Elected President', month: 1, year: 1980, notes: '' },
+      ]},
+      { id: 5012, name: 'Knitting', category: 'Hobby', startMonth: 9, startYear: 1934, endMonth: 2, endYear: 2026, ongoing: true, hypothetical: false, notes: 'Knitted a blanket for every grandchild and great-grandchild at birth. Total: 25 blankets. Her fingers still know what to do.', subEvents: [] },
+      { id: 5013, name: '10 Grandchildren', category: 'Personal', startMonth: 8, startYear: 1974, endMonth: 2, endYear: 2026, ongoing: true, hypothetical: false, notes: 'First grandchild Sarah born 1974. Youngest, Kieran, born 2006 in New Zealand. Agnes knows all their birthdays by heart.', subEvents: [
+        { id: 6014, name: 'Sarah born — first grandchild', month: 8, year: 1974, notes: '' },
+      ]},
+      { id: 5014, name: '15 Great-grandchildren', category: 'Personal', startMonth: 4, startYear: 2004, endMonth: 2, endYear: 2026, ongoing: true, hypothetical: false, notes: '15 great-grandchildren across the UK, New Zealand, and Canada. A hand-knitted blanket for every one.', subEvents: [
+        { id: 6015, name: 'Ava born — first great-grandchild', month: 4, year: 2004, notes: '' },
+      ]},
+      { id: 5015, name: 'Sheltered Housing', category: 'Personal', startMonth: 5, startYear: 2006, endMonth: 6, endYear: 2019, ongoing: false, hypothetical: false, notes: 'Independent flat at Elmhurst Court. Cooked her own meals until 90. Walked to the shops until 91.', subEvents: [] },
+      { id: 5016, name: 'Care Home', category: 'Personal', startMonth: 7, startYear: 2019, endMonth: 2, endYear: 2026, ongoing: true, hypothetical: false, notes: 'Meadowbrook Care Home, Sheffield. Still sharp as a tack. Strong opinions about the food, the weather, and modern politicians. The staff call her The Boss.', subEvents: [
+        { id: 6016, name: '100th birthday party', month: 1, year: 2026, notes: '47 family members attended. A telegram arrived from the King.' },
+      ]},
     ]
   },
 ];
@@ -698,14 +771,12 @@ function LifeNoodles() {
     return `LifeNoodles-${yyyy}-${mm}-${dd}.${extension}`;
   };
 
-  // Load an example life
+  // Load an example life (data only — callers are responsible for closing any open modal)
   const loadExample = (example) => {
     setMilestones(example.milestones);
     setCategories(DEFAULT_CATEGORIES);
     setVisibleCategories(Object.keys(DEFAULT_CATEGORIES));
     setSelectedId(null);
-    setShowInstructions(false);
-    setShowExamplesMenu(false);
     showToast(`Loaded: ${example.name}`);
   };
 
@@ -2325,7 +2396,7 @@ function LifeNoodles() {
                         <div style={{ color: '#9CA3AF', fontSize: '0.75rem', marginTop: '0.35rem' }}>{ex.milestones.length} noodles</div>
                       </div>
                       <button
-                        onClick={() => loadExample(ex)}
+                        onClick={() => { setShowInstructions(false); setShowExamplesMenu(false); loadExample(ex); }}
                         style={{ background: '#4F46E5', color: 'white', border: 'none', borderRadius: 12, padding: '0.6rem 1.1rem', fontSize: '0.875rem', fontWeight: 700, cursor: 'pointer', whiteSpace: 'nowrap', flexShrink: 0 }}
                       >
                         Load
